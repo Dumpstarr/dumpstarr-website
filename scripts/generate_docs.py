@@ -364,15 +364,16 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-mini-table a {{ color:var(--purple); text-decoration:none; }}
       .docs-mini-table a:hover {{ text-decoration:underline; }}
 
-      .docs-two-col {{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; }}
+      .docs-two-col {{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; margin-top:24px; }}
+      .docs-two-col > .docs-panel {{ min-width:0; }}
       .docs-mini-table {{ width:100%; border-collapse:collapse; font-size:.9rem; }}
-      .docs-mini-table td,.docs-mini-table th {{ padding:10px 12px; border-bottom:1px solid var(--outline); text-align:left; vertical-align:top; }}
+      .docs-mini-table td,.docs-mini-table th {{ padding:10px 12px; border-bottom:1px solid var(--outline); text-align:left; vertical-align:top; overflow-wrap:anywhere; }}
       .docs-mini-table th:first-child,.docs-mini-table td:first-child {{ width:72px; white-space:nowrap; color:var(--purple); font-weight:700; }}
       .docs-recent-table {{ table-layout:fixed; }}
       .docs-recent-table th:first-child,.docs-recent-table td:first-child {{ width:72px; }}
       .docs-recent-table th:last-child,.docs-recent-table td:last-child {{ width:auto; }}
-      @media (max-width: 1100px) {{ .docs-profile-grid {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} }}
-      @media (max-width: 860px) {{ .docs-stats,.docs-two-col,.docs-profile-grid {{ grid-template-columns:1fr; }} }}
+      @media (max-width: 1100px) {{ .docs-profile-grid {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} .docs-two-col {{ grid-template-columns:1fr; }} }}
+      @media (max-width: 860px) {{ .docs-stats,.docs-profile-grid {{ grid-template-columns:1fr; }} .docs-profile-metrics {{ grid-template-columns:1fr; }} }}
     </style>
     <div class="section-inner">
       <h2 class="section-title">Database Documentation</h2>
