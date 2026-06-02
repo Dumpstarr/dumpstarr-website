@@ -100,19 +100,37 @@ def trim(text: str | None, limit: int = 190) -> str:
     return value if len(value) <= limit else value[: limit - 1].rstrip() + "..."
 
 
-def read_more(value: str | None, limit: int = 155) -> str:
-    full = " ".join((value or "").replace("\\n", " ").split())
-    if not full:
+def markdown_inline(value: str) -> str:
+    escaped = h(value)
+    return re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", escaped)
+
+
+def markdown_description(value: str | None) -> str:
+    text = (value or "").replace("\\n", "\n").strip()
+    if not text:
         return ""
-    if len(full) <= limit:
-        return h(full)
-    preview = trim(full, limit)
-    return (
-        '<details class="docs-read-more">'
-        f'<summary>{h(preview)} <span>Read more</span></summary>'
-        f'<p>{h(full)}</p>'
-        '</details>'
-    )
+
+    parts = []
+    list_items = []
+
+    def flush_list() -> None:
+        nonlocal list_items
+        if list_items:
+            parts.append("<ul>" + "".join(f"<li>{markdown_inline(item)}</li>" for item in list_items) + "</ul>")
+            list_items = []
+
+    for raw_line in text.splitlines():
+        line = " ".join(raw_line.split())
+        if not line:
+            continue
+        if line.startswith("- "):
+            list_items.append(line[2:].strip())
+        else:
+            flush_list()
+            parts.append(f"<p>{markdown_inline(line)}</p>")
+
+    flush_list()
+    return '<div class="docs-markdown">' + "".join(parts) + "</div>"
 
 
 def h(value: object) -> str:
@@ -182,7 +200,7 @@ def commit_for_path(repo: pathlib.Path, path: pathlib.Path) -> str:
     return sh(["git", "log", "-1", "--format=%H", "--", str(rel)], repo)
 
 
-def recent_ops(ops: list[pathlib.Path], limit: int = 25) -> list[dict[str, str]]:
+def recent_ops(ops: list[pathlib.Path], limit: int) -> list[dict[str, str]]:
     rows = []
     repo_url = github_repo_url(DATABASE)
     for path in reversed(ops[-limit:]):
@@ -237,20 +255,22 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
     profile_html = "\n".join(
         "<tr>"
         f"<td><strong>{h(p['name'])}</strong></td>"
-        f"<td>{read_more(p['description'])}</td>"
+        f"<td>{markdown_description(p['description'])}</td>"
         f"<td>{h(p['count'])}</td>"
         f"<td>{h(p['min_score'])}</td>"
         "</tr>"
         for p in profiles
     )
 
+    fixes = readme_fixes()
+    op_limit = max(1, len(fixes))
     op_html = "\n".join(
         f'<tr><td><a href="{h(row["url"])}" target="_blank" rel="noopener">#{h(row["number"])}</a></td><td>{h(row["title"])}</td></tr>'
-        for row in recent_ops(ops)
+        for row in recent_ops(ops, op_limit)
     )
 
     fix_html = "\n".join(
-        f"<tr><td>{h(show)}</td><td>{h(detail)}</td></tr>" for show, detail in readme_fixes()
+        f"<tr><td>{h(show)}</td><td>{h(detail)}</td></tr>" for show, detail in fixes
     )
 
     return f"""{START}
@@ -270,11 +290,9 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-table th {{ background:var(--surface-1); color:var(--on-surface-v); text-align:left; font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; }}
       .docs-table th,.docs-table td {{ padding:12px 14px; border-bottom:1px solid var(--outline); vertical-align:top; }}
       .docs-table tr:last-child td {{ border-bottom:0; }}
-      .docs-read-more summary {{ cursor:pointer; color:var(--on-surface); }}
-      .docs-read-more summary span {{ color:var(--purple); font-weight:700; white-space:nowrap; }}
-      .docs-read-more p {{ margin-top:8px; color:var(--on-surface-v); }}
-      .docs-scroll {{ max-height:456px; overflow-y:auto; border:1px solid var(--outline); border-radius:var(--radius-m); }}
-      .docs-scroll .docs-mini-table th {{ position:sticky; top:0; z-index:1; }}
+      .docs-markdown p {{ margin:0 0 8px; }}
+      .docs-markdown ul {{ margin:0; padding-left:18px; }}
+      .docs-markdown li {{ margin:4px 0; }}
       .docs-mini-table a {{ color:var(--purple); text-decoration:none; }}
       .docs-mini-table a:hover {{ text-decoration:underline; }}
 
@@ -303,11 +321,11 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       <div class="docs-two-col">
         <div class="docs-panel">
           <h3>Recent database operations</h3>
-          <div class="docs-scroll"><table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody>{op_html}</tbody></table></div>
+          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody>{op_html}</tbody></table>
         </div>
         <div class="docs-panel">
           <h3>Targeted show fixes</h3>
-          <div class="docs-scroll"><table class="docs-mini-table"><thead><tr><th>Show</th><th>Behavior</th></tr></thead><tbody>{fix_html}</tbody></table></div>
+          <table class="docs-mini-table"><thead><tr><th>Show</th><th>Behavior</th></tr></thead><tbody>{fix_html}</tbody></table>
         </div>
       </div>
     </div>
