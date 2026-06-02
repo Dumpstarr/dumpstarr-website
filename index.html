@@ -694,14 +694,14 @@
       .docs-stat strong { display:block; font-family:'Outfit',sans-serif; font-size:2rem; color:var(--purple); margin:4px 0; }
       .docs-panel { background:#fff; border:1px solid var(--outline); border-radius:var(--radius-l); padding:24px; box-shadow:0 8px 26px rgba(28,27,31,.06); overflow:hidden; }
       .docs-panel h3 { font-family:'Outfit',sans-serif; margin-bottom:14px; color:var(--on-surface); }
-      .docs-profile-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
-      .docs-profile-card { border:1px solid var(--outline); border-radius:var(--radius-m); padding:18px; background:var(--surface); }
+      .docs-profile-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; align-items:stretch; }
+      .docs-profile-card { display:flex; flex-direction:column; border:1px solid var(--outline); border-radius:var(--radius-m); padding:18px; background:var(--surface); }
       .docs-profile-card h4 { font-family:'Outfit',sans-serif; font-size:1.25rem; color:var(--purple); margin:0 0 10px; }
-      .docs-profile-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:14px 0 0; }
-      .docs-profile-metrics span { min-width:0; padding:8px 10px; border:1px solid var(--outline); border-radius:var(--radius-s); background:#fff; }
-      .docs-profile-metrics small { display:block; color:var(--on-surface-v); font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px; }
-      .docs-profile-metrics strong { display:block; color:var(--on-surface); font-size:.98rem; line-height:1.25; overflow-wrap:anywhere; }
-      .docs-markdown { font-size:.88rem; line-height:1.45; color:var(--on-surface-v); }
+      .docs-profile-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:14px 0 0; padding-top:12px; margin-top:auto; }
+      .docs-profile-metrics span { min-width:0; padding:7px 8px; border:1px solid var(--outline); border-radius:var(--radius-s); background:#fff; }
+      .docs-profile-metrics small { display:block; color:var(--on-surface-v); font-size:.56rem; line-height:1; font-weight:800; text-transform:uppercase; letter-spacing:.025em; margin-bottom:4px; white-space:nowrap; }
+      .docs-profile-metrics strong { display:block; color:var(--on-surface); font-size:.86rem; font-weight:700; line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .docs-markdown { font-size:.86rem; line-height:1.42; color:var(--on-surface-v); margin-bottom:14px; }
       .docs-markdown p { margin:0 0 8px; }
       .docs-markdown ul { margin:0; padding-left:18px; }
       .docs-markdown li { margin:4px 0; }
@@ -717,7 +717,7 @@
       .docs-recent-table th:first-child,.docs-recent-table td:first-child { width:72px; }
       .docs-recent-table th:last-child,.docs-recent-table td:last-child { width:auto; }
       @media (max-width: 1100px) { .docs-profile-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .docs-two-col { grid-template-columns:1fr; } }
-      @media (max-width: 860px) { .docs-stats,.docs-profile-grid { grid-template-columns:1fr; } .docs-profile-metrics { grid-template-columns:1fr; } }
+      @media (max-width: 860px) { .docs-stats,.docs-profile-grid { grid-template-columns:1fr; } }
     </style>
     <div class="section-inner">
       <h2 class="section-title">Database Documentation</h2>
