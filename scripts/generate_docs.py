@@ -137,23 +137,62 @@ def h(value: object) -> str:
     return html.escape(str(value), quote=True)
 
 
-def quality_names(conn: sqlite3.Connection, profile_name: str) -> list[str]:
-    candidates = [profile_name]
-    if profile_name == "LQ 1080p":
-        candidates.append("1080p LQ")
+def profile_aliases(profile_name: str) -> list[str]:
+    aliases = [profile_name]
+    legacy = {
+        "Anime 1080p": "1080p Anime",
+        "LQ 1080p": "1080p LQ",
+    }
+    if profile_name in legacy:
+        aliases.append(legacy[profile_name])
+    return aliases
 
-    for candidate in candidates:
+
+def initial_quality_names(profile_name: str) -> list[str]:
+    initial = OPS / "1.initial.sql"
+    if not initial.exists():
+        return []
+    sql_text = initial.read_text(errors="ignore")
+    qualities: list[str] = []
+    seen = set()
+    for candidate in profile_aliases(profile_name):
+        pattern = re.compile(
+            r"INSERT INTO quality_profile_qualities.*?WHERE qp\.name = '" + re.escape(candidate) +
+            r"' AND (?:qg\.quality_profile_name = qp\.name AND qg\.name|q\.name) = '([^']+)';",
+            re.S,
+        )
+        for match in pattern.finditer(sql_text):
+            quality = match.group(1)
+            if quality not in seen:
+                seen.add(quality)
+                qualities.append(quality)
+        if qualities:
+            return qualities
+    return qualities
+
+
+def quality_names(conn: sqlite3.Connection, profile_name: str) -> list[str]:
+    for candidate in profile_aliases(profile_name):
         rows = conn.execute(
             "SELECT COALESCE(quality_group_name, quality_name, name) AS quality "
             "FROM quality_profile_qualities "
-            "WHERE quality_profile_name = ? AND COALESCE(quality_group_name, quality_name, name) IS NOT NULL "
+            "WHERE quality_profile_name = ? "
+            "AND COALESCE(quality_group_name, quality_name, name) IS NOT NULL "
+            "AND (enabled IS NULL OR enabled != '0') "
             "ORDER BY CAST(position AS INT)",
             (candidate,),
         ).fetchall()
-        qualities = [row["quality"] for row in rows if row["quality"]]
-        if qualities:
+        qualities = []
+        seen = set()
+        for row in rows:
+            quality = row["quality"]
+            if quality and quality not in seen:
+                seen.add(quality)
+                qualities.append(quality)
+        if len(qualities) >= 2:
             return qualities
-    return []
+
+    return initial_quality_names(profile_name)
 
 
 def profile_rows(conn: sqlite3.Connection) -> list[dict[str, object]]:
@@ -281,10 +320,10 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
             f"<h4>{h(profile['name'])}</h4>"
             f"{markdown_description(str(profile['description'] or ''))}"
             '<div class="docs-profile-metrics">'
-            f"<span><small>Format count</small><strong>{h(profile['count'])}</strong></span>"
+            f"<span><small>Formats</small><strong>{h(profile['count'])}</strong></span>"
             f"<span><small>Min score</small><strong>{h(profile['min_score'])}</strong></span>"
             "</div>"
-            '<div class="docs-quality-list"><small>Qualities</small><ol>'
+            '<div class="docs-quality-list"><small>Quality hierarchy</small><ol>'
             + quality_html
             + "</ol></div>"
             "</article>"
@@ -314,15 +353,15 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-stat strong {{ display:block; font-family:'Outfit',sans-serif; font-size:2rem; color:var(--purple); margin:4px 0; }}
       .docs-panel {{ background:#fff; border:1px solid var(--outline); border-radius:var(--radius-l); padding:24px; box-shadow:0 8px 26px rgba(28,27,31,.06); overflow:hidden; }}
       .docs-panel h3 {{ font-family:'Outfit',sans-serif; margin-bottom:14px; color:var(--on-surface); }}
-      .docs-profile-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }}
+      .docs-profile-grid {{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }}
       .docs-profile-card {{ border:1px solid var(--outline); border-radius:var(--radius-m); padding:18px; background:var(--surface); }}
       .docs-profile-card h4 {{ font-family:'Outfit',sans-serif; font-size:1.25rem; color:var(--purple); margin:0 0 10px; }}
       .docs-profile-metrics {{ display:flex; gap:12px; flex-wrap:wrap; margin:14px 0; }}
-      .docs-profile-metrics span {{ min-width:118px; padding:10px 12px; border:1px solid var(--outline); border-radius:var(--radius-s); background:#fff; }}
+      .docs-profile-metrics span {{ flex:1 1 110px; padding:8px 10px; border:1px solid var(--outline); border-radius:var(--radius-s); background:#fff; }}
       .docs-profile-metrics small,.docs-quality-list small {{ display:block; color:var(--on-surface-v); font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }}
       .docs-profile-metrics strong {{ color:var(--on-surface); font-size:1.15rem; }}
-      .docs-quality-list ol {{ display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style-position:inside; }}
-      .docs-quality-list li {{ background:#fff; border:1px solid var(--outline); border-radius:999px; padding:6px 10px; color:var(--on-surface-v); font-size:.84rem; }}
+      .docs-quality-list ol {{ margin:0; padding-left:20px; }}
+      .docs-quality-list li {{ margin:3px 0; color:var(--on-surface-v); font-size:.86rem; }}
       .docs-markdown p {{ margin:0 0 8px; }}
       .docs-markdown ul {{ margin:0; padding-left:18px; }}
       .docs-markdown li {{ margin:4px 0; }}
@@ -336,6 +375,7 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-recent-table {{ table-layout:fixed; }}
       .docs-recent-table th:first-child,.docs-recent-table td:first-child {{ width:72px; }}
       .docs-recent-table th:last-child,.docs-recent-table td:last-child {{ width:auto; }}
+      @media (max-width: 1100px) {{ .docs-profile-grid {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} }}
       @media (max-width: 860px) {{ .docs-stats,.docs-two-col,.docs-profile-grid {{ grid-template-columns:1fr; }} }}
     </style>
     <div class="section-inner">
