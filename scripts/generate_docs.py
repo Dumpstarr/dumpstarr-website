@@ -303,7 +303,6 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
         ("Profiles", len(profiles)),
         ("Custom formats", scalar(conn, "SELECT COUNT(*) FROM custom_formats")),
         ("Regex patterns", scalar(conn, "SELECT COUNT(*) FROM regular_expressions")),
-        ("SQL operations", len(ops)),
     ]
 
     stat_html = "\n".join(
@@ -314,7 +313,7 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
     profile_html_parts = []
     for profile in profiles:
         qualities = profile["qualities"] if isinstance(profile["qualities"], list) else []
-        quality_html = "".join(f"<li>{h(quality)}</li>" for quality in qualities) if qualities else "<li>Not specified</li>"
+        target_quality = qualities[0] if qualities else "Not specified"
         profile_html_parts.append(
             '<article class="docs-profile-card">'
             f"<h4>{h(profile['name'])}</h4>"
@@ -322,10 +321,8 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
             '<div class="docs-profile-metrics">'
             f"<span><small>Formats</small><strong>{h(profile['count'])}</strong></span>"
             f"<span><small>Min score</small><strong>{h(profile['min_score'])}</strong></span>"
+            f"<span><small>Target quality</small><strong>{h(target_quality)}</strong></span>"
             "</div>"
-            '<div class="docs-quality-list"><small>Quality hierarchy</small><ol>'
-            + quality_html
-            + "</ol></div>"
             "</article>"
         )
     profile_html = "\n".join(profile_html_parts)
@@ -347,7 +344,7 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-section {{ background: var(--surface); }}
       .docs-meta {{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-start; color:var(--on-surface-v); font-size:.92rem; margin-bottom:28px; text-align:left; }}
       .docs-meta code {{ background:var(--surface-1); padding:3px 8px; border-radius:999px; color:var(--purple); }}
-      .docs-stats {{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:32px 0; }}
+      .docs-stats {{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:32px 0; }}
       .docs-stat {{ background:linear-gradient(145deg,var(--surface-1),#fff); border:1px solid var(--outline); border-radius:var(--radius-m); padding:18px; }}
       .docs-stat span {{ display:block; color:var(--on-surface-v); font-size:.82rem; text-transform:uppercase; letter-spacing:.06em; }}
       .docs-stat strong {{ display:block; font-family:'Outfit',sans-serif; font-size:2rem; color:var(--purple); margin:4px 0; }}
@@ -356,12 +353,11 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-profile-grid {{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }}
       .docs-profile-card {{ border:1px solid var(--outline); border-radius:var(--radius-m); padding:18px; background:var(--surface); }}
       .docs-profile-card h4 {{ font-family:'Outfit',sans-serif; font-size:1.25rem; color:var(--purple); margin:0 0 10px; }}
-      .docs-profile-metrics {{ display:flex; gap:12px; flex-wrap:wrap; margin:14px 0; }}
-      .docs-profile-metrics span {{ flex:1 1 110px; padding:8px 10px; border:1px solid var(--outline); border-radius:var(--radius-s); background:#fff; }}
-      .docs-profile-metrics small,.docs-quality-list small {{ display:block; color:var(--on-surface-v); font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }}
-      .docs-profile-metrics strong {{ color:var(--on-surface); font-size:1.15rem; }}
-      .docs-quality-list ol {{ margin:0; padding-left:20px; }}
-      .docs-quality-list li {{ margin:3px 0; color:var(--on-surface-v); font-size:.86rem; }}
+      .docs-profile-metrics {{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:14px 0 0; }}
+      .docs-profile-metrics span {{ min-width:0; padding:8px 10px; border:1px solid var(--outline); border-radius:var(--radius-s); background:#fff; }}
+      .docs-profile-metrics small {{ display:block; color:var(--on-surface-v); font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px; }}
+      .docs-profile-metrics strong {{ display:block; color:var(--on-surface); font-size:.98rem; line-height:1.25; overflow-wrap:anywhere; }}
+      .docs-markdown {{ font-size:.88rem; line-height:1.45; color:var(--on-surface-v); }}
       .docs-markdown p {{ margin:0 0 8px; }}
       .docs-markdown ul {{ margin:0; padding-left:18px; }}
       .docs-markdown li {{ margin:4px 0; }}
