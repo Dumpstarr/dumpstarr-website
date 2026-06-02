@@ -254,9 +254,13 @@ def github_repo_url(repo: pathlib.Path) -> str:
     return f"https://github.com/{match.group(1)}" if match else ""
 
 
-def commit_for_path(repo: pathlib.Path, path: pathlib.Path) -> str:
+def commit_info_for_path(repo: pathlib.Path, path: pathlib.Path) -> tuple[str, str]:
     rel = path.relative_to(repo)
-    return sh(["git", "log", "-1", "--format=%H", "--", str(rel)], repo)
+    output = sh(["git", "log", "-1", "--format=%H%x00%s", "--", str(rel)], repo)
+    if not output:
+        return "", ""
+    commit, _, subject = output.partition("\x00")
+    return commit.strip(), subject.strip()
 
 
 def recent_ops(ops: list[pathlib.Path], limit: int) -> list[dict[str, str]]:
@@ -264,10 +268,10 @@ def recent_ops(ops: list[pathlib.Path], limit: int) -> list[dict[str, str]]:
     repo_url = github_repo_url(DATABASE)
     for path in reversed(ops[-limit:]):
         number, title = path.name.split(".", 1)
-        commit = commit_for_path(DATABASE, path)
+        commit, subject = commit_info_for_path(DATABASE, path)
         rows.append({
             "number": number,
-            "title": titleize_change(title),
+            "title": subject or titleize_change(title),
             "url": f"{repo_url}/commit/{commit}" if repo_url and commit else "",
         })
     return rows
