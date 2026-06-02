@@ -137,6 +137,25 @@ def h(value: object) -> str:
     return html.escape(str(value), quote=True)
 
 
+def quality_names(conn: sqlite3.Connection, profile_name: str) -> list[str]:
+    candidates = [profile_name]
+    if profile_name == "LQ 1080p":
+        candidates.append("1080p LQ")
+
+    for candidate in candidates:
+        rows = conn.execute(
+            "SELECT COALESCE(quality_group_name, quality_name, name) AS quality "
+            "FROM quality_profile_qualities "
+            "WHERE quality_profile_name = ? AND COALESCE(quality_group_name, quality_name, name) IS NOT NULL "
+            "ORDER BY CAST(position AS INT)",
+            (candidate,),
+        ).fetchall()
+        qualities = [row["quality"] for row in rows if row["quality"]]
+        if qualities:
+            return qualities
+    return []
+
+
 def profile_rows(conn: sqlite3.Connection) -> list[dict[str, object]]:
     rows = []
     profiles = conn.execute(
@@ -151,6 +170,7 @@ def profile_rows(conn: sqlite3.Connection) -> list[dict[str, object]]:
             "count": count,
             "min_score": profile["minimum_custom_format_score"] or "0",
             "description": profile["description"] or "",
+            "qualities": quality_names(conn, name),
         })
     return rows
 
@@ -252,15 +272,24 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
         for label, value in stats
     )
 
-    profile_html = "\n".join(
-        "<tr>"
-        f"<td><strong>{h(p['name'])}</strong></td>"
-        f"<td>{markdown_description(p['description'])}</td>"
-        f"<td>{h(p['count'])}</td>"
-        f"<td>{h(p['min_score'])}</td>"
-        "</tr>"
-        for p in profiles
-    )
+    profile_html_parts = []
+    for profile in profiles:
+        qualities = profile["qualities"] if isinstance(profile["qualities"], list) else []
+        quality_html = "".join(f"<li>{h(quality)}</li>" for quality in qualities) if qualities else "<li>Not specified</li>"
+        profile_html_parts.append(
+            '<article class="docs-profile-card">'
+            f"<h4>{h(profile['name'])}</h4>"
+            f"{markdown_description(str(profile['description'] or ''))}"
+            '<div class="docs-profile-metrics">'
+            f"<span><small>Format count</small><strong>{h(profile['count'])}</strong></span>"
+            f"<span><small>Min score</small><strong>{h(profile['min_score'])}</strong></span>"
+            "</div>"
+            '<div class="docs-quality-list"><small>Qualities</small><ol>'
+            + quality_html
+            + "</ol></div>"
+            "</article>"
+        )
+    profile_html = "\n".join(profile_html_parts)
 
     fixes = readme_fixes()
     op_limit = max(1, len(fixes))
@@ -277,7 +306,7 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
   <section id="docs" class="docs-section">
     <style>
       .docs-section {{ background: var(--surface); }}
-      .docs-meta {{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; color:var(--on-surface-v); font-size:.92rem; margin-bottom:28px; }}
+      .docs-meta {{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-start; color:var(--on-surface-v); font-size:.92rem; margin-bottom:28px; text-align:left; }}
       .docs-meta code {{ background:var(--surface-1); padding:3px 8px; border-radius:999px; color:var(--purple); }}
       .docs-stats {{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:32px 0; }}
       .docs-stat {{ background:linear-gradient(145deg,var(--surface-1),#fff); border:1px solid var(--outline); border-radius:var(--radius-m); padding:18px; }}
@@ -285,11 +314,15 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-stat strong {{ display:block; font-family:'Outfit',sans-serif; font-size:2rem; color:var(--purple); margin:4px 0; }}
       .docs-panel {{ background:#fff; border:1px solid var(--outline); border-radius:var(--radius-l); padding:24px; box-shadow:0 8px 26px rgba(28,27,31,.06); overflow:hidden; }}
       .docs-panel h3 {{ font-family:'Outfit',sans-serif; margin-bottom:14px; color:var(--on-surface); }}
-      .docs-table-wrap {{ overflow-x:auto; border:1px solid var(--outline); border-radius:var(--radius-m); }}
-      .docs-table {{ width:100%; border-collapse:collapse; min-width:760px; font-size:.9rem; }}
-      .docs-table th {{ background:var(--surface-1); color:var(--on-surface-v); text-align:left; font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; }}
-      .docs-table th,.docs-table td {{ padding:12px 14px; border-bottom:1px solid var(--outline); vertical-align:top; }}
-      .docs-table tr:last-child td {{ border-bottom:0; }}
+      .docs-profile-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }}
+      .docs-profile-card {{ border:1px solid var(--outline); border-radius:var(--radius-m); padding:18px; background:var(--surface); }}
+      .docs-profile-card h4 {{ font-family:'Outfit',sans-serif; font-size:1.25rem; color:var(--purple); margin:0 0 10px; }}
+      .docs-profile-metrics {{ display:flex; gap:12px; flex-wrap:wrap; margin:14px 0; }}
+      .docs-profile-metrics span {{ min-width:118px; padding:10px 12px; border:1px solid var(--outline); border-radius:var(--radius-s); background:#fff; }}
+      .docs-profile-metrics small,.docs-quality-list small {{ display:block; color:var(--on-surface-v); font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }}
+      .docs-profile-metrics strong {{ color:var(--on-surface); font-size:1.15rem; }}
+      .docs-quality-list ol {{ display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style-position:inside; }}
+      .docs-quality-list li {{ background:#fff; border:1px solid var(--outline); border-radius:999px; padding:6px 10px; color:var(--on-surface-v); font-size:.84rem; }}
       .docs-markdown p {{ margin:0 0 8px; }}
       .docs-markdown ul {{ margin:0; padding-left:18px; }}
       .docs-markdown li {{ margin:4px 0; }}
@@ -303,7 +336,7 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-recent-table {{ table-layout:fixed; }}
       .docs-recent-table th:first-child,.docs-recent-table td:first-child {{ width:72px; }}
       .docs-recent-table th:last-child,.docs-recent-table td:last-child {{ width:auto; }}
-      @media (max-width: 860px) {{ .docs-stats,.docs-two-col {{ grid-template-columns:1fr; }} }}
+      @media (max-width: 860px) {{ .docs-stats,.docs-two-col,.docs-profile-grid {{ grid-template-columns:1fr; }} }}
     </style>
     <div class="section-inner">
       <h2 class="section-title">Database Documentation</h2>
@@ -315,8 +348,8 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       </div>
       <div class="docs-stats">{stat_html}</div>
       <div class="docs-panel">
-        <h3>Quality profile matrix</h3>
-        <div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>Profile</th><th>Description</th><th>Formats</th><th>Min score</th></tr></thead><tbody>{profile_html}</tbody></table></div>
+        <h3>Quality profiles</h3>
+        <div class="docs-profile-grid">{profile_html}</div>
       </div>
       <div class="docs-two-col">
         <div class="docs-panel">
