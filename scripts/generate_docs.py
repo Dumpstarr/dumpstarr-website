@@ -112,17 +112,7 @@ def profile_rows(conn: sqlite3.Connection) -> list[dict[str, object]]:
     ).fetchall()
     for profile in profiles:
         name = profile["name"]
-        arr_types = [r[0] for r in conn.execute(
-            "SELECT DISTINCT arr_type FROM quality_profile_custom_formats "
-            "WHERE quality_profile_name = ? ORDER BY arr_type",
-            (name,),
-        ).fetchall()]
-        app = ", ".join(a.title() if a != "all" else "Both" for a in arr_types) or "Both"
         count = scalar(conn, "SELECT COUNT(*) FROM quality_profile_custom_formats WHERE quality_profile_name = ?", (name,))
-        positive = scalar(conn, "SELECT COUNT(*) FROM quality_profile_custom_formats WHERE quality_profile_name = ? AND CAST(score AS INT) > 0", (name,))
-        negative = scalar(conn, "SELECT COUNT(*) FROM quality_profile_custom_formats WHERE quality_profile_name = ? AND CAST(score AS INT) < 0", (name,))
-        zero = scalar(conn, "SELECT COUNT(*) FROM quality_profile_custom_formats WHERE quality_profile_name = ? AND CAST(score AS INT) = 0", (name,))
-        hard_blocks = scalar(conn, "SELECT COUNT(*) FROM quality_profile_custom_formats WHERE quality_profile_name = ? AND CAST(score AS INT) <= -10000", (name,))
         top = conn.execute(
             "SELECT custom_format_name, score FROM quality_profile_custom_formats "
             "WHERE quality_profile_name = ? ORDER BY CAST(score AS INT) DESC LIMIT 3",
@@ -130,12 +120,7 @@ def profile_rows(conn: sqlite3.Connection) -> list[dict[str, object]]:
         ).fetchall()
         rows.append({
             "name": name,
-            "app": app,
             "count": count,
-            "positive": positive,
-            "negative": negative,
-            "zero": zero,
-            "hard_blocks": hard_blocks,
             "min_score": profile["minimum_custom_format_score"] or "0",
             "upgrade_until": profile["upgrade_until_score"] or "0",
             "description": trim(profile["description"], 230),
@@ -144,21 +129,45 @@ def profile_rows(conn: sqlite3.Connection) -> list[dict[str, object]]:
     return rows
 
 
-def tag_rows(conn: sqlite3.Connection) -> list[sqlite3.Row]:
-    return conn.execute(
-        "SELECT tag_name, COUNT(*) AS count FROM regular_expression_tags "
-        "GROUP BY tag_name ORDER BY count DESC, tag_name LIMIT 12"
-    ).fetchall()
+def display_date(value: str) -> str:
+    try:
+        return "-".join([value[5:7], value[8:10], value[:4]])
+    except Exception:
+        return value
+
+
+def titleize_change(value: str) -> str:
+    acronyms = {
+        "ai", "asl", "av1", "b&w", "dv", "hdr", "hdr10", "hq", "lq", "ma",
+        "mcr", "mtbb", "regex", "sdr", "sql", "tbbt", "tv", "web", "x265",
+    }
+    small_words = {"a", "an", "and", "for", "from", "in", "of", "on", "the", "to", "with"}
+    words = (
+        value.rsplit(".sql", 1)[0]
+        .replace("-", " ")
+        .replace("foramt", "format")
+        .strip()
+        .split()
+    )
+    formatted = []
+    for index, word in enumerate(words):
+        lower = word.lower()
+        if lower in acronyms:
+            formatted.append(lower.upper())
+        elif index > 0 and lower in small_words:
+            formatted.append(lower)
+        else:
+            formatted.append(lower.capitalize())
+    return " ".join(formatted)
 
 
 def recent_ops(ops: list[pathlib.Path], limit: int = 10) -> list[dict[str, str]]:
     rows = []
     for path in reversed(ops[-limit:]):
         number, title = path.name.split(".", 1)
-        title = title.rsplit(".sql", 1)[0].replace("-", " ").strip().capitalize()
         rows.append({
             "number": number,
-            "title": title,
+            "title": titleize_change(title),
         })
     return rows
 
@@ -187,42 +196,31 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
     meta = json.loads(META.read_text()) if META.exists() else {}
     commit = sh(["git", "rev-parse", "--short", "HEAD"], DATABASE) or "unknown"
     commit_date = sh(["git", "log", "-1", "--format=%cs"], DATABASE) or "unknown"
-    generated = commit_date
+    generated = display_date(commit_date)
+    source_date = display_date(commit_date)
     profiles = profile_rows(conn)
-    max_count = max((int(str(p["count"])) for p in profiles), default=1)
 
     stats = [
-        ("Profiles", len(profiles), "Radarr and Sonarr quality profiles"),
-        ("Custom formats", scalar(conn, "SELECT COUNT(*) FROM custom_formats"), "Scoring rules replayed from SQL"),
-        ("Regex patterns", scalar(conn, "SELECT COUNT(*) FROM regular_expressions"), "Release title and group matchers"),
-        ("SQL operations", len(ops), "Versioned database changes"),
+        ("Profiles", len(profiles)),
+        ("Custom formats", scalar(conn, "SELECT COUNT(*) FROM custom_formats")),
+        ("Regex patterns", scalar(conn, "SELECT COUNT(*) FROM regular_expressions")),
+        ("SQL operations", len(ops)),
     ]
 
     stat_html = "\n".join(
-        f'<article class="docs-stat"><span>{h(label)}</span><strong>{h(value)}</strong><small>{h(desc)}</small></article>'
-        for label, value, desc in stats
+        f'<article class="docs-stat"><span>{h(label)}</span><strong>{h(value)}</strong></article>'
+        for label, value in stats
     )
 
     profile_html = "\n".join(
         "<tr>"
-        f"<td><strong>{h(p['name'])}</strong><small>{h(p['description'])}</small></td>"
-        f"<td>{h(p['app'])}</td>"
+        f"<td><strong>{h(p['name'])}</strong></td>"
+        f"<td>{h(p['description'])}</td>"
         f"<td>{h(p['count'])}</td>"
-        f"<td><span class='score good'>+{h(p['positive'])}</span> <span class='score bad'>-{h(p['negative'])}</span> <span class='score neutral'>{h(p['zero'])} zero</span></td>"
         f"<td>{h(p['min_score'])}</td>"
-        f"<td>{h(p['hard_blocks'])}</td>"
         f"<td>{h(p['top'])}</td>"
         "</tr>"
         for p in profiles
-    )
-
-    chart_html = "\n".join(
-        f'<div class="docs-bar-row"><span>{h(p["name"])}</span><div class="docs-bar"><i style="width:{max(6, int(int(str(p["count"])) / max_count * 100))}%"></i></div><b>{h(p["count"])}</b></div>'
-        for p in profiles
-    )
-
-    tag_html = "\n".join(
-        f"<tr><td>{h(row['tag_name'])}</td><td>{h(row['count'])}</td></tr>" for row in tag_rows(conn)
     )
 
     op_html = "\n".join(
@@ -244,27 +242,22 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-stat {{ background:linear-gradient(145deg,var(--surface-1),#fff); border:1px solid var(--outline); border-radius:var(--radius-m); padding:18px; }}
       .docs-stat span {{ display:block; color:var(--on-surface-v); font-size:.82rem; text-transform:uppercase; letter-spacing:.06em; }}
       .docs-stat strong {{ display:block; font-family:'Outfit',sans-serif; font-size:2rem; color:var(--purple); margin:4px 0; }}
-      .docs-stat small {{ color:var(--on-surface-v); }}
-      .docs-grid {{ display:grid; grid-template-columns:1.2fr .8fr; gap:24px; margin:24px 0; }}
       .docs-panel {{ background:#fff; border:1px solid var(--outline); border-radius:var(--radius-l); padding:24px; box-shadow:0 8px 26px rgba(28,27,31,.06); overflow:hidden; }}
       .docs-panel h3 {{ font-family:'Outfit',sans-serif; margin-bottom:14px; color:var(--on-surface); }}
       .docs-table-wrap {{ overflow-x:auto; border:1px solid var(--outline); border-radius:var(--radius-m); }}
-      .docs-table {{ width:100%; border-collapse:collapse; min-width:860px; font-size:.9rem; }}
+      .docs-table {{ width:100%; border-collapse:collapse; min-width:980px; font-size:.9rem; }}
       .docs-table th {{ background:var(--surface-1); color:var(--on-surface-v); text-align:left; font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; }}
       .docs-table th,.docs-table td {{ padding:12px 14px; border-bottom:1px solid var(--outline); vertical-align:top; }}
       .docs-table tr:last-child td {{ border-bottom:0; }}
-      .docs-table small {{ display:block; color:var(--on-surface-v); max-width:420px; margin-top:4px; }}
-      .score {{ display:inline-block; padding:2px 8px; border-radius:999px; font-size:.78rem; margin:1px; }}
-      .score.good {{ background:var(--green-light); color:var(--green); }}
-      .score.bad {{ background:#FFE1D6; color:var(--fire); }}
-      .score.neutral {{ background:var(--surface-1); color:var(--on-surface-v); }}
-      .docs-bar-row {{ display:grid; grid-template-columns:150px 1fr 42px; gap:10px; align-items:center; margin:10px 0; font-size:.9rem; }}
-      .docs-bar {{ height:12px; background:var(--surface-1); border-radius:999px; overflow:hidden; }}
-      .docs-bar i {{ display:block; height:100%; background:linear-gradient(90deg,var(--purple),var(--green-mid)); border-radius:999px; }}
+
       .docs-two-col {{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; }}
       .docs-mini-table {{ width:100%; border-collapse:collapse; font-size:.9rem; }}
-      .docs-mini-table td,.docs-mini-table th {{ padding:9px 0; border-bottom:1px solid var(--outline); text-align:left; }}
-      @media (max-width: 860px) {{ .docs-stats,.docs-grid,.docs-two-col {{ grid-template-columns:1fr; }} .docs-bar-row {{ grid-template-columns:1fr; }} }}
+      .docs-mini-table td,.docs-mini-table th {{ padding:10px 12px; border-bottom:1px solid var(--outline); text-align:left; vertical-align:top; }}
+      .docs-mini-table th:first-child,.docs-mini-table td:first-child {{ width:72px; white-space:nowrap; color:var(--purple); font-weight:700; }}
+      .docs-recent-table {{ table-layout:fixed; }}
+      .docs-recent-table th:first-child,.docs-recent-table td:first-child {{ width:72px; }}
+      .docs-recent-table th:last-child,.docs-recent-table td:last-child {{ width:auto; }}
+      @media (max-width: 860px) {{ .docs-stats,.docs-two-col {{ grid-template-columns:1fr; }} }}
     </style>
     <div class="section-inner">
       <h2 class="section-title">Database Documentation</h2>
@@ -273,28 +266,18 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
         <span>Package: <code>{h(meta.get('name', 'Dumpstarr Database'))} {h(meta.get('version', ''))}</code></span>
         <span>Minimum Profilarr: <code>{h(meta.get('profilarr', {}).get('minimum_version', '2.0.0'))}</code></span>
         <span>Source commit: <code>{h(commit)}</code></span>
-        <span>Source date: <code>{h(commit_date)}</code></span>
+        <span>Source date: <code>{h(source_date)}</code></span>
         <span>Generated: <code>{h(generated)}</code></span>
       </div>
       <div class="docs-stats">{stat_html}</div>
-      <div class="docs-grid">
-        <div class="docs-panel">
-          <h3>Profile format coverage</h3>
-          {chart_html}
-        </div>
-        <div class="docs-panel">
-          <h3>Top regex tags</h3>
-          <table class="docs-mini-table"><thead><tr><th>Tag</th><th>Patterns</th></tr></thead><tbody>{tag_html}</tbody></table>
-        </div>
-      </div>
       <div class="docs-panel">
         <h3>Quality profile matrix</h3>
-        <div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>Profile</th><th>App</th><th>Formats</th><th>Score mix</th><th>Min score</th><th>Hard blocks</th><th>Top preferred formats</th></tr></thead><tbody>{profile_html}</tbody></table></div>
+        <div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>Profile</th><th>Description</th><th>Formats</th><th>Min score</th><th>Top preferred formats</th></tr></thead><tbody>{profile_html}</tbody></table></div>
       </div>
       <div class="docs-two-col">
         <div class="docs-panel">
           <h3>Recent database operations</h3>
-          <table class="docs-mini-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody>{op_html}</tbody></table>
+          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody>{op_html}</tbody></table>
         </div>
         <div class="docs-panel">
           <h3>Targeted show fixes</h3>
