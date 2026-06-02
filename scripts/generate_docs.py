@@ -330,12 +330,12 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
     fixes = readme_fixes()
     op_limit = max(1, len(fixes))
     op_html = "\n".join(
-        f'<tr><td><a href="{h(row["url"])}" target="_blank" rel="noopener">#{h(row["number"])}</a></td><td>{h(row["title"])}</td></tr>'
+        f'<tr><td data-label="Op"><a href="{h(row["url"])}" target="_blank" rel="noopener">#{h(row["number"])}</a></td><td data-label="Change">{h(row["title"])}</td></tr>'
         for row in recent_ops(ops, op_limit)
     )
 
     fix_html = "\n".join(
-        f"<tr><td>{h(show)}</td><td>{h(detail)}</td></tr>" for show, detail in fixes
+        f'<tr><td data-label="Show">{h(show)}</td><td data-label="Behavior">{h(detail)}</td></tr>' for show, detail in fixes
     )
 
     return f"""{START}
@@ -374,6 +374,7 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-recent-table th:last-child,.docs-recent-table td:last-child {{ width:auto; }}
       @media (max-width: 1100px) {{ .docs-profile-grid {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} .docs-two-col {{ grid-template-columns:1fr; }} }}
       @media (max-width: 860px) {{ .docs-stats,.docs-profile-grid {{ grid-template-columns:1fr; }} }}
+      @media (max-width: 640px) {{ .docs-panel {{ padding:18px; }} .docs-mini-table,.docs-mini-table thead,.docs-mini-table tbody,.docs-mini-table tr,.docs-mini-table th,.docs-mini-table td {{ display:block; width:100%; }} .docs-mini-table thead {{ display:none; }} .docs-mini-table tr {{ padding:10px 0; border-bottom:1px solid var(--outline); }} .docs-mini-table td,.docs-mini-table th:first-child,.docs-mini-table td:first-child,.docs-recent-table th:first-child,.docs-recent-table td:first-child,.docs-recent-table th:last-child,.docs-recent-table td:last-child {{ width:100%; padding:6px 0; border-bottom:0; white-space:normal; }} .docs-mini-table td::before {{ content:attr(data-label); display:block; margin-bottom:2px; color:var(--on-surface-v); font-size:.66rem; line-height:1; font-weight:800; text-transform:uppercase; letter-spacing:.04em; }} }}
     </style>
     <div class="section-inner">
       <h2 class="section-title">Database Documentation</h2>
