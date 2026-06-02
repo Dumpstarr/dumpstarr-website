@@ -8,7 +8,6 @@ human-readable documentation section into index.html.
 
 from __future__ import annotations
 
-import datetime as dt
 import html
 import json
 import os
@@ -190,9 +189,9 @@ def readme_fixes() -> list[tuple[str, str]]:
 
 def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
     meta = json.loads(META.read_text()) if META.exists() else {}
-    generated = dt.datetime.now(dt.UTC).strftime("%Y-%m-%d %H:%M UTC")
     commit = sh(["git", "rev-parse", "--short", "HEAD"], DATABASE) or "unknown"
     commit_date = sh(["git", "log", "-1", "--format=%cs"], DATABASE) or "unknown"
+    generated = commit_date
     profiles = profile_rows(conn)
     max_count = max((int(str(p["count"])) for p in profiles), default=1)
 
