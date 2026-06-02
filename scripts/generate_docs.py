@@ -15,7 +15,7 @@ import pathlib
 import re
 import sqlite3
 import subprocess
-from collections import Counter, defaultdict
+from collections import defaultdict
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
@@ -156,13 +156,9 @@ def recent_ops(ops: list[pathlib.Path], limit: int = 10) -> list[dict[str, str]]
     for path in reversed(ops[-limit:]):
         number, title = path.name.split(".", 1)
         title = title.rsplit(".sql", 1)[0].replace("-", " ").strip().capitalize()
-        text = path.read_text(errors="ignore")
-        begin = re.findall(r"-- --- BEGIN op \d+ \((.*?)\)", text)
-        summary = Counter(item.split(' "', 1)[0].strip() for item in begin).most_common(3)
         rows.append({
             "number": number,
             "title": title,
-            "summary": ", ".join(f"{name}: {count}" for name, count in summary) or "SQL maintenance",
         })
     return rows
 
@@ -230,7 +226,7 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
     )
 
     op_html = "\n".join(
-        f"<tr><td>#{h(row['number'])}</td><td>{h(row['title'])}</td><td>{h(row['summary'])}</td></tr>"
+        f"<tr><td>#{h(row['number'])}</td><td>{h(row['title'])}</td></tr>"
         for row in recent_ops(ops)
     )
 
@@ -298,7 +294,7 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       <div class="docs-two-col">
         <div class="docs-panel">
           <h3>Recent database operations</h3>
-          <table class="docs-mini-table"><thead><tr><th>Op</th><th>Change</th><th>Summary</th></tr></thead><tbody>{op_html}</tbody></table>
+          <table class="docs-mini-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody>{op_html}</tbody></table>
         </div>
         <div class="docs-panel">
           <h3>Targeted show fixes</h3>
