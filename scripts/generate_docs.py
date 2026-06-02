@@ -100,6 +100,21 @@ def trim(text: str | None, limit: int = 190) -> str:
     return value if len(value) <= limit else value[: limit - 1].rstrip() + "..."
 
 
+def read_more(value: str | None, limit: int = 155) -> str:
+    full = " ".join((value or "").replace("\\n", " ").split())
+    if not full:
+        return ""
+    if len(full) <= limit:
+        return h(full)
+    preview = trim(full, limit)
+    return (
+        '<details class="docs-read-more">'
+        f'<summary>{h(preview)} <span>Read more</span></summary>'
+        f'<p>{h(full)}</p>'
+        '</details>'
+    )
+
+
 def h(value: object) -> str:
     return html.escape(str(value), quote=True)
 
@@ -107,24 +122,17 @@ def h(value: object) -> str:
 def profile_rows(conn: sqlite3.Connection) -> list[dict[str, object]]:
     rows = []
     profiles = conn.execute(
-        "SELECT name, description, minimum_custom_format_score, upgrade_until_score "
+        "SELECT name, description, minimum_custom_format_score "
         "FROM quality_profiles ORDER BY name"
     ).fetchall()
     for profile in profiles:
         name = profile["name"]
         count = scalar(conn, "SELECT COUNT(*) FROM quality_profile_custom_formats WHERE quality_profile_name = ?", (name,))
-        top = conn.execute(
-            "SELECT custom_format_name, score FROM quality_profile_custom_formats "
-            "WHERE quality_profile_name = ? ORDER BY CAST(score AS INT) DESC LIMIT 3",
-            (name,),
-        ).fetchall()
         rows.append({
             "name": name,
             "count": count,
             "min_score": profile["minimum_custom_format_score"] or "0",
-            "upgrade_until": profile["upgrade_until_score"] or "0",
-            "description": trim(profile["description"], 230),
-            "top": ", ".join(f"{r['custom_format_name']} ({r['score']})" for r in top),
+            "description": profile["description"] or "",
         })
     return rows
 
@@ -161,13 +169,29 @@ def titleize_change(value: str) -> str:
     return " ".join(formatted)
 
 
-def recent_ops(ops: list[pathlib.Path], limit: int = 10) -> list[dict[str, str]]:
+def github_repo_url(repo: pathlib.Path) -> str:
+    remote = sh(["git", "remote", "get-url", "origin"], repo)
+    if not remote:
+        return ""
+    match = re.search(r"github\.com[:/]([^/]+/[^/.]+)(?:\.git)?$", remote)
+    return f"https://github.com/{match.group(1)}" if match else ""
+
+
+def commit_for_path(repo: pathlib.Path, path: pathlib.Path) -> str:
+    rel = path.relative_to(repo)
+    return sh(["git", "log", "-1", "--format=%H", "--", str(rel)], repo)
+
+
+def recent_ops(ops: list[pathlib.Path], limit: int = 25) -> list[dict[str, str]]:
     rows = []
+    repo_url = github_repo_url(DATABASE)
     for path in reversed(ops[-limit:]):
         number, title = path.name.split(".", 1)
+        commit = commit_for_path(DATABASE, path)
         rows.append({
             "number": number,
             "title": titleize_change(title),
+            "url": f"{repo_url}/commit/{commit}" if repo_url and commit else "",
         })
     return rows
 
@@ -189,15 +213,13 @@ def readme_fixes() -> list[tuple[str, str]]:
         parts = [p.strip() for p in line.strip("|").split("|")]
         if len(parts) >= 2 and parts[0] and parts[1]:
             rows.append((parts[0], parts[1]))
-    return rows[:14]
+    return rows
 
 
 def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
     meta = json.loads(META.read_text()) if META.exists() else {}
-    commit = sh(["git", "rev-parse", "--short", "HEAD"], DATABASE) or "unknown"
     commit_date = sh(["git", "log", "-1", "--format=%cs"], DATABASE) or "unknown"
-    generated = display_date(commit_date)
-    source_date = display_date(commit_date)
+    modified = display_date(commit_date)
     profiles = profile_rows(conn)
 
     stats = [
@@ -215,16 +237,15 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
     profile_html = "\n".join(
         "<tr>"
         f"<td><strong>{h(p['name'])}</strong></td>"
-        f"<td>{h(p['description'])}</td>"
+        f"<td>{read_more(p['description'])}</td>"
         f"<td>{h(p['count'])}</td>"
         f"<td>{h(p['min_score'])}</td>"
-        f"<td>{h(p['top'])}</td>"
         "</tr>"
         for p in profiles
     )
 
     op_html = "\n".join(
-        f"<tr><td>#{h(row['number'])}</td><td>{h(row['title'])}</td></tr>"
+        f'<tr><td><a href="{h(row["url"])}" target="_blank" rel="noopener">#{h(row["number"])}</a></td><td>{h(row["title"])}</td></tr>'
         for row in recent_ops(ops)
     )
 
@@ -245,10 +266,17 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-panel {{ background:#fff; border:1px solid var(--outline); border-radius:var(--radius-l); padding:24px; box-shadow:0 8px 26px rgba(28,27,31,.06); overflow:hidden; }}
       .docs-panel h3 {{ font-family:'Outfit',sans-serif; margin-bottom:14px; color:var(--on-surface); }}
       .docs-table-wrap {{ overflow-x:auto; border:1px solid var(--outline); border-radius:var(--radius-m); }}
-      .docs-table {{ width:100%; border-collapse:collapse; min-width:980px; font-size:.9rem; }}
+      .docs-table {{ width:100%; border-collapse:collapse; min-width:760px; font-size:.9rem; }}
       .docs-table th {{ background:var(--surface-1); color:var(--on-surface-v); text-align:left; font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; }}
       .docs-table th,.docs-table td {{ padding:12px 14px; border-bottom:1px solid var(--outline); vertical-align:top; }}
       .docs-table tr:last-child td {{ border-bottom:0; }}
+      .docs-read-more summary {{ cursor:pointer; color:var(--on-surface); }}
+      .docs-read-more summary span {{ color:var(--purple); font-weight:700; white-space:nowrap; }}
+      .docs-read-more p {{ margin-top:8px; color:var(--on-surface-v); }}
+      .docs-scroll {{ max-height:456px; overflow-y:auto; border:1px solid var(--outline); border-radius:var(--radius-m); }}
+      .docs-scroll .docs-mini-table th {{ position:sticky; top:0; z-index:1; }}
+      .docs-mini-table a {{ color:var(--purple); text-decoration:none; }}
+      .docs-mini-table a:hover {{ text-decoration:underline; }}
 
       .docs-two-col {{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; }}
       .docs-mini-table {{ width:100%; border-collapse:collapse; font-size:.9rem; }}
@@ -265,23 +293,21 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       <div class="docs-meta">
         <span>Package: <code>{h(meta.get('name', 'Dumpstarr Database'))} {h(meta.get('version', ''))}</code></span>
         <span>Minimum Profilarr: <code>{h(meta.get('profilarr', {}).get('minimum_version', '2.0.0'))}</code></span>
-        <span>Source commit: <code>{h(commit)}</code></span>
-        <span>Source date: <code>{h(source_date)}</code></span>
-        <span>Generated: <code>{h(generated)}</code></span>
+        <span>Modified: <code>{h(modified)}</code></span>
       </div>
       <div class="docs-stats">{stat_html}</div>
       <div class="docs-panel">
         <h3>Quality profile matrix</h3>
-        <div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>Profile</th><th>Description</th><th>Formats</th><th>Min score</th><th>Top preferred formats</th></tr></thead><tbody>{profile_html}</tbody></table></div>
+        <div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>Profile</th><th>Description</th><th>Formats</th><th>Min score</th></tr></thead><tbody>{profile_html}</tbody></table></div>
       </div>
       <div class="docs-two-col">
         <div class="docs-panel">
           <h3>Recent database operations</h3>
-          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody>{op_html}</tbody></table>
+          <div class="docs-scroll"><table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody>{op_html}</tbody></table></div>
         </div>
         <div class="docs-panel">
           <h3>Targeted show fixes</h3>
-          <table class="docs-mini-table"><thead><tr><th>Show</th><th>Behavior</th></tr></thead><tbody>{fix_html}</tbody></table>
+          <div class="docs-scroll"><table class="docs-mini-table"><thead><tr><th>Show</th><th>Behavior</th></tr></thead><tbody>{fix_html}</tbody></table></div>
         </div>
       </div>
     </div>

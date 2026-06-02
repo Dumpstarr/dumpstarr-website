@@ -695,10 +695,17 @@
       .docs-panel { background:#fff; border:1px solid var(--outline); border-radius:var(--radius-l); padding:24px; box-shadow:0 8px 26px rgba(28,27,31,.06); overflow:hidden; }
       .docs-panel h3 { font-family:'Outfit',sans-serif; margin-bottom:14px; color:var(--on-surface); }
       .docs-table-wrap { overflow-x:auto; border:1px solid var(--outline); border-radius:var(--radius-m); }
-      .docs-table { width:100%; border-collapse:collapse; min-width:980px; font-size:.9rem; }
+      .docs-table { width:100%; border-collapse:collapse; min-width:760px; font-size:.9rem; }
       .docs-table th { background:var(--surface-1); color:var(--on-surface-v); text-align:left; font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; }
       .docs-table th,.docs-table td { padding:12px 14px; border-bottom:1px solid var(--outline); vertical-align:top; }
       .docs-table tr:last-child td { border-bottom:0; }
+      .docs-read-more summary { cursor:pointer; color:var(--on-surface); }
+      .docs-read-more summary span { color:var(--purple); font-weight:700; white-space:nowrap; }
+      .docs-read-more p { margin-top:8px; color:var(--on-surface-v); }
+      .docs-scroll { max-height:456px; overflow-y:auto; border:1px solid var(--outline); border-radius:var(--radius-m); }
+      .docs-scroll .docs-mini-table th { position:sticky; top:0; z-index:1; }
+      .docs-mini-table a { color:var(--purple); text-decoration:none; }
+      .docs-mini-table a:hover { text-decoration:underline; }
 
       .docs-two-col { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; }
       .docs-mini-table { width:100%; border-collapse:collapse; font-size:.9rem; }
@@ -715,9 +722,7 @@
       <div class="docs-meta">
         <span>Package: <code>Dumpstarr Database 2.0.0</code></span>
         <span>Minimum Profilarr: <code>2.0.0</code></span>
-        <span>Source commit: <code>a0ce4c8</code></span>
-        <span>Source date: <code>06-01-2026</code></span>
-        <span>Generated: <code>06-01-2026</code></span>
+        <span>Modified: <code>06-01-2026</code></span>
       </div>
       <div class="docs-stats"><article class="docs-stat"><span>Profiles</span><strong>8</strong></article>
 <article class="docs-stat"><span>Custom formats</span><strong>161</strong></article>
@@ -725,32 +730,47 @@
 <article class="docs-stat"><span>SQL operations</span><strong>258</strong></article></div>
       <div class="docs-panel">
         <h3>Quality profile matrix</h3>
-        <div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>Profile</th><th>Description</th><th>Formats</th><th>Min score</th><th>Top preferred formats</th></tr></thead><tbody><tr><td><strong>Anime 1080p</strong></td><td>Based on the TRaSH Guides Anime Profile, focusing on media that has Dual Audio. - This profile will grab between a SDTV - 1080p Bluray file. - You will be preferring Dual Audio media (ie including English along with original lang...</td><td>63</td><td>0</td><td>Anime WEB Tier 01 (2000), Anime WEB Tier 02 (1900), Anime WEB Tier 03 (1800)</td></tr>
-<tr><td><strong>LQ 1080p</strong></td><td>- This profile is for **SIDCA** (Sh*t I Don&#x27;t Care About). The primary tier and LQ groups are not scored to allow &quot;low quality&quot; releases. For example, user requests &quot;Keeping Up with the Kardashians&quot; and you would prefer to save a...</td><td>26</td><td>0</td><td>SIDCA Tier 01 (400), SIDCA Tier 01 (400), SIDCA Tier 02 (300)</td></tr>
-<tr><td><strong>Movies 1080p</strong></td><td>This profile focuses on streaming optimized sources with little to no transcoding needed and is recommended for the average user or if you **do not** use a dedicated streaming box. (i.e. AppleTV, NVIDIA Shield, etc) - This profil...</td><td>56</td><td>750</td><td>UHD Bluray Tier 01 (1900), UHD Bluray Tier 02 (1850), UHD Bluray Tier 03 (1800)</td></tr>
-<tr><td><strong>Movies 1080p HQ</strong></td><td>This profile is like the primary Movie profile, but with merged source qualities. This results in higher-quality, WEB releases being preferred. This usually results in higher-quality audio, higher video bitrates and 30% larger fi...</td><td>56</td><td>500</td><td>WEB Tier 01 (1700), WEB Tier 02 (1650), WEB Tier 03 (1600)</td></tr>
-<tr><td><strong>Movies 2160p</strong></td><td>This profile focuses on streaming optimized sources with little to no transcoding needed and is recommended for the average user or if you **do not** use a dedicated streaming box. (i.e. AppleTV, NVIDIA Shield, etc) - This profil...</td><td>61</td><td>1000</td><td>UHD Bluray Tier 01 (1900), UHD Bluray Tier 02 (1850), UHD Bluray Tier 03 (1800)</td></tr>
-<tr><td><strong>Movies 2160p HQ</strong></td><td>This profile is like the primary Movie profile, but with merged source qualities. This results in higher-quality, WEB releases being preferred. This usually results in higher-quality audio, higher video bitrates and 30% larger fi...</td><td>63</td><td>500</td><td>WEB Tier 01 (1700), WEB Tier 02 (1650), WEB Tier 03 (1600)</td></tr>
-<tr><td><strong>TV 1080p</strong></td><td>Based on the TRaSH Guides WEB-1080p (Alternative) profile, focusing on balanced quality/file size. - This profile is recommended for a set-it-and-forget-it setup. - Uncensored versions will be preferred while extended/special ver...</td><td>68</td><td>0</td><td>WEB Tier 01 (1700), WEB Tier 02 (1650), WEB Tier 03 (1600)</td></tr>
-<tr><td><strong>TV 2160p</strong></td><td>Based on the TRaSH Guides WEB-2160p (Alternative) profile, focusing on balanced quality/file size. - This profile is recommended for a set-it-and-forget-it setup. - x265/HEVC is **allowed** on this profile, so some transcoding is...</td><td>76</td><td>0</td><td>WEB Tier 01 (1700), WEB Tier 02 (1650), WEB Tier 03 (1600)</td></tr></tbody></table></div>
+        <div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>Profile</th><th>Description</th><th>Formats</th><th>Min score</th></tr></thead><tbody><tr><td><strong>Anime 1080p</strong></td><td><details class="docs-read-more"><summary>Based on the TRaSH Guides Anime Profile, focusing on media that has Dual Audio. - This profile will grab between a SDTV - 1080p Bluray file. - You will be... <span>Read more</span></summary><p>Based on the TRaSH Guides Anime Profile, focusing on media that has Dual Audio. - This profile will grab between a SDTV - 1080p Bluray file. - You will be preferring Dual Audio media (ie including English along with original language). If you&#x27;d prefer to **only** have the original language (Japanese), remove the Dual Audio format and set your language preference in this profile. - If you&#x27;d prefer to always grab Dual Audio releases, change the Dual Audio format score from 101 to 500</p></details></td><td>63</td><td>0</td></tr>
+<tr><td><strong>LQ 1080p</strong></td><td><details class="docs-read-more"><summary>- This profile is for **SIDCA** (Sh*t I Don&#x27;t Care About). The primary tier and LQ groups are not scored to allow &quot;low quality&quot; releases. For example, use... <span>Read more</span></summary><p>- This profile is for **SIDCA** (Sh*t I Don&#x27;t Care About). The primary tier and LQ groups are not scored to allow &quot;low quality&quot; releases. For example, user requests &quot;Keeping Up with the Kardashians&quot; and you would prefer to save as much storage space as humanly possible so this user can watch this &quot;show&quot;. - You can expect to grab **MeGusta** releases 99% of the time. - AV1 and x265 codecs are allowed and scored for preference of x265. **NOTE! you may encounter transcoding if the client side does not support these codecs.**</p></details></td><td>26</td><td>0</td></tr>
+<tr><td><strong>Movies 1080p</strong></td><td><details class="docs-read-more"><summary>This profile focuses on streaming optimized sources with little to no transcoding needed and is recommended for the average user or if you **do not** use... <span>Read more</span></summary><p>This profile focuses on streaming optimized sources with little to no transcoding needed and is recommended for the average user or if you **do not** use a dedicated streaming box. (i.e. AppleTV, NVIDIA Shield, etc) - This profile is recommended for a set-it-and-forget-it setup. - This profile will prefer streaming optimized releases groups like **BHDStudio** and **hallowed**. - This profile does not allow releases with HD Audio to ensure direct-play compatibility.</p></details></td><td>56</td><td>750</td></tr>
+<tr><td><strong>Movies 1080p HQ</strong></td><td><details class="docs-read-more"><summary>This profile is like the primary Movie profile, but with merged source qualities. This results in higher-quality, WEB releases being preferred. This usual... <span>Read more</span></summary><p>This profile is like the primary Movie profile, but with merged source qualities. This results in higher-quality, WEB releases being preferred. This usually results in higher-quality audio, higher video bitrates and 30% larger file size. - This profile is recommended for a set-it-and-forget-it setup. - This profile will allow HD audio like TrueHD, DTS-X, etc but only if the source is WEB-DL</p></details></td><td>56</td><td>500</td></tr>
+<tr><td><strong>Movies 2160p</strong></td><td><details class="docs-read-more"><summary>This profile focuses on streaming optimized sources with little to no transcoding needed and is recommended for the average user or if you **do not** use... <span>Read more</span></summary><p>This profile focuses on streaming optimized sources with little to no transcoding needed and is recommended for the average user or if you **do not** use a dedicated streaming box. (i.e. AppleTV, NVIDIA Shield, etc) - This profile is recommended for a set-it-and-forget-it setup. - This profile will prefer streaming optimized releases groups like **BHDStudio** and **hallowed**. - This profile does not allow releases with HD Audio to ensure direct-play compatibility. - Releases without HDR fallback will be scored negatively to ensure playability across platforms.</p></details></td><td>61</td><td>1000</td></tr>
+<tr><td><strong>Movies 2160p HQ</strong></td><td><details class="docs-read-more"><summary>This profile is like the primary Movie profile, but with merged source qualities. This results in higher-quality, WEB releases being preferred. This usual... <span>Read more</span></summary><p>This profile is like the primary Movie profile, but with merged source qualities. This results in higher-quality, WEB releases being preferred. This usually results in higher-quality audio, higher video bitrates and 30% larger file size. - This profile is recommended for a set-it-and-forget-it setup. - This profile prefers 4K releases with **HDR** and **Dolby Vision**. - This profile will allow HD audio like TrueHD, DTS-X, etc but only if the source is WEB-DL - Releases **without** HDR fallback are not allowed.</p></details></td><td>63</td><td>500</td></tr>
+<tr><td><strong>TV 1080p</strong></td><td><details class="docs-read-more"><summary>Based on the TRaSH Guides WEB-1080p (Alternative) profile, focusing on balanced quality/file size. - This profile is recommended for a set-it-and-forget-i... <span>Read more</span></summary><p>Based on the TRaSH Guides WEB-1080p (Alternative) profile, focusing on balanced quality/file size. - This profile is recommended for a set-it-and-forget-it setup. - Uncensored versions will be preferred while extended/special versions will be used as fallback.</p></details></td><td>68</td><td>0</td></tr>
+<tr><td><strong>TV 2160p</strong></td><td><details class="docs-read-more"><summary>Based on the TRaSH Guides WEB-2160p (Alternative) profile, focusing on balanced quality/file size. - This profile is recommended for a set-it-and-forget-i... <span>Read more</span></summary><p>Based on the TRaSH Guides WEB-2160p (Alternative) profile, focusing on balanced quality/file size. - This profile is recommended for a set-it-and-forget-it setup. - x265/HEVC is **allowed** on this profile, so some transcoding is possible if your client **does not** support x265/HEVC - Uncensored versions will be preferred while extended/special versions will be used as fallback. - Releases **without** HDR fallback are not allowed.</p></details></td><td>76</td><td>0</td></tr></tbody></table></div>
       </div>
       <div class="docs-two-col">
         <div class="docs-panel">
           <h3>Recent database operations</h3>
-          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody><tr><td>#258</td><td>Cleaned Up LQ Format Titles</td></tr>
-<tr><td>#257</td><td>Added LQ Group Automation Format Added Wadu to LQ Group Auto</td></tr>
-<tr><td>#256</td><td>Add MCR and Asenshi MTBB to LQ Automation</td></tr>
-<tr><td>#255</td><td>Add Xiquexique to Bad Dual Groups</td></tr>
-<tr><td>#254</td><td>Fix 720p Quality on Anime</td></tr>
-<tr><td>#253</td><td>Yes Another Fix for LQ Automation</td></tr>
-<tr><td>#252</td><td>Fixed LQ Automation Groups REGEX</td></tr>
-<tr><td>#251</td><td>Add Reza to Dumpstarr LQ Automation Groups</td></tr>
-<tr><td>#250</td><td>Move Varyg to New Dumpstarr LQ Automation Format</td></tr>
-<tr><td>#249</td><td>Added Spider Noir Authentic B W REGEX</td></tr></tbody></table>
+          <div class="docs-scroll"><table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody><tr><td><a href="https://github.com/Dumpstarr/Database/commit/a0ce4c857765edf452dd8e41dc3ee87859e3e490" target="_blank" rel="noopener">#258</a></td><td>Cleaned Up LQ Format Titles</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/37c84331bbb432793f91a2aac4ee0c42aa6e1a78" target="_blank" rel="noopener">#257</a></td><td>Added LQ Group Automation Format Added Wadu to LQ Group Auto</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/657cfad5767565bc2cb85ebca512125cd5141dae" target="_blank" rel="noopener">#256</a></td><td>Add MCR and Asenshi MTBB to LQ Automation</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/49b3f9c8b550dc2b2bde54eed228c30b9e9901ab" target="_blank" rel="noopener">#255</a></td><td>Add Xiquexique to Bad Dual Groups</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/5e7371af555bd6796b464b861bd6c263ac5a8ecb" target="_blank" rel="noopener">#254</a></td><td>Fix 720p Quality on Anime</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/389258e56947bb039747cd33dbe53da9c119f2f1" target="_blank" rel="noopener">#253</a></td><td>Yes Another Fix for LQ Automation</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/23bf4b4b129bb2cf315d5d0321ddb4c6c1604a7b" target="_blank" rel="noopener">#252</a></td><td>Fixed LQ Automation Groups REGEX</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/68b6fd341e73e9efed67b13db7bcbb05ad41ae14" target="_blank" rel="noopener">#251</a></td><td>Add Reza to Dumpstarr LQ Automation Groups</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/791d094e6c4828229850708be74ed7ab2776a93e" target="_blank" rel="noopener">#250</a></td><td>Move Varyg to New Dumpstarr LQ Automation Format</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/5e9be0d9adc47369bc81c65fd083279ca5ee7c06" target="_blank" rel="noopener">#249</a></td><td>Added Spider Noir Authentic B W REGEX</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/b395c01e46fabadde8828ade05f9d4f4f8c5d700" target="_blank" rel="noopener">#248</a></td><td>Pulled Beta Anime Refactor the Sources in Anime</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/975b7f539929d5f172e7e1ca989bdbaf87f11cd7" target="_blank" rel="noopener">#247</a></td><td>Updated TV 1080p Description</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/7b24a8eaeefb7bcb22eda815baaaf20b04aef810" target="_blank" rel="noopener">#246</a></td><td>Refactor Bd WEB Tiers on Beta</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/75f438da34c1a3b0f3c253b89044804086c93ceb" target="_blank" rel="noopener">#245</a></td><td>Add Madsky to WEB Tier 01</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/d21b4c0c15771e9f1da38cae66d6651ca4ea5e16" target="_blank" rel="noopener">#244</a></td><td>Updated Anime Beta Description</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/25eaa1a983ade6c4f8ee4bb6d71f4561864953bb" target="_blank" rel="noopener">#243</a></td><td>Pulled Bd Tiers from Anime Beta and Refactored Sources</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/836623949f6a5e8b025b8a486a8f2c9b249044e9" target="_blank" rel="noopener">#242</a></td><td>Pulled Fbje and Bh REGEX Tests</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/95bd995dd7a7e5ca97f7dafa7d59f82356a71f6c" target="_blank" rel="noopener">#241</a></td><td>Added Varyg to Dumpstarr LQ</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/be24e69d313d25339f13921af8cca4aef07d76b8" target="_blank" rel="noopener">#240</a></td><td>Added Baki Hanma Banned Groups</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/f6e5ca6d8b788eb8b4862066300a6f0be598a306" target="_blank" rel="noopener">#239</a></td><td>Lowered Anime WEB Tier Scores</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/613ce36a420f17877a83404faeb93b939ee5566a" target="_blank" rel="noopener">#238</a></td><td>Fbje Banned Groups Added Bad Source Multis to Anime Added Fb</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/2d1374494c366b9eec5f22a9a37e290a004a80e3" target="_blank" rel="noopener">#237</a></td><td>Fixed Sidca Tier 03 Ivy</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/3339ca2e16c4b3922af884526167ba369779d369" target="_blank" rel="noopener">#236</a></td><td>Sidca Tier Updates</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/73a964dc6ed59d60639309659b3b6a402123de6c" target="_blank" rel="noopener">#235</a></td><td>Fixed Dts Format</td></tr>
+<tr><td><a href="https://github.com/Dumpstarr/Database/commit/d75205d5dc3e528eb2b3c8b7e8aa5eea118832c1" target="_blank" rel="noopener">#234</a></td><td>Adjusted Source Scores for WEB on Anime Beta</td></tr></tbody></table></div>
         </div>
         <div class="docs-panel">
           <h3>Targeted show fixes</h3>
-          <table class="docs-mini-table"><thead><tr><th>Show</th><th>Behavior</th></tr></thead><tbody><tr><td>Adventure Time</td><td>Correctly sources releases that follow TheTVDB ordering for Season 8.</td></tr>
+          <div class="docs-scroll"><table class="docs-mini-table"><thead><tr><th>Show</th><th>Behavior</th></tr></thead><tbody><tr><td>Adventure Time</td><td>Correctly sources releases that follow TheTVDB ordering for Season 8.</td></tr>
 <tr><td>Arthur</td><td>Avoids releases where bad release names cause incorrect parsing or loops.</td></tr>
 <tr><td>The Big Bang Theory</td><td>Avoids 25fps PAL versions.</td></tr>
 <tr><td>Family Guy</td><td>Avoids 25fps PAL versions.</td></tr>
@@ -761,7 +781,7 @@
 <tr><td>Parks and Recreation</td><td>Avoids releases with incorrect source IDs which cause loops.</td></tr>
 <tr><td>Scrubs</td><td>Avoids 25fps PAL versions.</td></tr>
 <tr><td>Spider-Noir</td><td>Prefer &quot;Authentic B&amp;W&quot; versions.</td></tr>
-<tr><td>Whose Line Is It Anyway (US</td><td>Targets correct releases for early seasons of the US version due to inconsistent naming.</td></tr></tbody></table>
+<tr><td>Whose Line Is It Anyway (US</td><td>Targets correct releases for early seasons of the US version due to inconsistent naming.</td></tr></tbody></table></div>
         </div>
       </div>
     </div>
