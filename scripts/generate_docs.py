@@ -395,12 +395,12 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       </div>
       <div class="docs-two-col">
         <div class="docs-panel">
-          <h3>Recent Changes</h3>
-          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody>{op_html}</tbody></table>
-        </div>
-        <div class="docs-panel">
           <h3>Show Specific Fixes</h3>
           <table class="docs-mini-table"><thead><tr><th>Show</th><th>Behavior</th></tr></thead><tbody>{fix_html}</tbody></table>
+        </div>
+        <div class="docs-panel">
+          <h3>Recent Changes</h3>
+          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody>{op_html}</tbody></table>
         </div>
       </div>
     </div>
