@@ -4,6 +4,48 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dumpstarr - Custom Formats for Radarr & Sonarr</title>
+  <meta name="description" content="Dumpstarr is a community-maintained database of custom formats and quality profiles for Radarr and Sonarr, built for use with Profilarr. Get decently sized media that looks great." />
+  <meta name="keywords" content="radarr, sonarr, custom formats, profilarr, media server, plex, jellyfin, 4k, 1080p, hdr, dolby vision, anime, quality profiles" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://dumpstarr.dev/" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Dumpstarr - Custom Formats for Radarr & Sonarr" />
+  <meta property="og:description" content="Community-maintained custom formats and quality profiles for Radarr and Sonarr. Built for Profilarr. For a media setup that isn't a dumpster fire." />
+  <meta property="og:image" content="https://git.dumpstarr.dev/avatars/fa0b9a9809481a3f808984f26422585e3240b2d4328d974ffc2ee6ad2787abed?size=200" />
+  <meta property="og:url" content="https://dumpstarr.dev/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dumpstarr" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dumpstarr - Custom Formats for Radarr & Sonarr" />
+  <meta name="twitter:description" content="Community-maintained custom formats and quality profiles for Radarr and Sonarr. Built for Profilarr." />
+  <meta name="twitter:image" content="https://git.dumpstarr.dev/avatars/fa0b9a9809481a3f808984f26422585e3240b2d4328d974ffc2ee6ad2787abed?size=200" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Dumpstarr",
+    "description": "Community-maintained database of custom formats and quality profiles for Radarr and Sonarr, built for use with Profilarr.",
+    "url": "https://dumpstarr.dev/",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Dumpstarr",
+      "url": "https://dumpstarr.dev/"
+    }
+  }
+  </script>
+
   <link rel="icon" type="image/png" href="https://git.dumpstarr.dev/avatars/fa0b9a9809481a3f808984f26422585e3240b2d4328d974ffc2ee6ad2787abed?size=200" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -581,7 +623,7 @@
 <body>
 
   <!-- NAV -->
-  <nav>
+  <nav aria-label="Main navigation">
     <div class="nav-inner">
       <a href="#" class="nav-logo">
         <img src="https://git.dumpstarr.dev/avatars/fa0b9a9809481a3f808984f26422585e3240b2d4328d974ffc2ee6ad2787abed?size=200" alt="Dumpstarr logo" />
@@ -592,11 +634,13 @@
         <li><a href="#start">Get Started</a></li>
         <li><a href="#docs">Docs</a></li>
         <li><a href="#faq">FAQ</a></li>
-        <li><a href="https://discord.gg/" target="_blank">Discord</a></li>
-        <li><a href="https://github.com/Dumpstarr/Database" target="_blank" class="nav-cta">GitHub →</a></li>
+        <li><a href="https://discord.gg/" target="_blank" rel="noopener nofollow">Discord</a></li>
+        <li><a href="https://github.com/Dumpstarr/Database" target="_blank" rel="noopener nofollow" class="nav-cta">GitHub →</a></li>
       </ul>
     </div>
   </nav>
+
+  <main>
 
   <!-- HERO -->
   <div class="hero">
@@ -611,7 +655,7 @@
         <strong>Profilarr</strong>. <span class="hero-slogan">For a media setup that isn't a dumpster fire&nbsp;:D</span>
       </p>
       <div class="hero-actions">
-        <a href="https://github.com/Dumpstarr/Database" target="_blank" class="btn btn-filled">
+        <a href="https://github.com/Dumpstarr/Database" target="_blank" class="btn btn-filled" rel="noopener nofollow">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           Browse on GitHub
         </a>
@@ -660,7 +704,7 @@
           <h3>Install Profilarr</h3>
           <p>Profilarr is the bridge between Dumpstarr and your *arr apps. Set it up first - it handles syncing formats and profiles automatically.</p>
           <br />
-          <a href="https://dictionarry.dev/" target="_blank">Dictionarry Website →</a>
+          <a href="https://dictionarry.dev/" target="_blank" rel="noopener nofollow">Dictionarry Website →</a>
         </div>
         <div class="step-card">
           <div class="step-num">02</div>
@@ -726,7 +770,7 @@
       <div class="docs-meta">
         <span>Package: <code>Dumpstarr Database 2.0.0</code></span>
         <span>Minimum Profilarr: <code>2.0.0</code></span>
-        <span>Modified: <code>06-03-2026</code></span>
+        <span>Modified: <code>06-02-2026</code></span>
       </div>
       <div class="docs-stats"><article class="docs-stat"><span>Profiles</span><strong>8</strong></article>
 <article class="docs-stat"><span>Custom formats</span><strong>161</strong></article>
@@ -750,7 +794,8 @@
 <tr><td data-label="Show">The Big Bang Theory</td><td data-label="Behavior">Avoids 25fps PAL versions.</td></tr>
 <tr><td data-label="Show">Family Guy</td><td data-label="Behavior">Avoids 25fps PAL versions.</td></tr>
 <tr><td data-label="Show">House</td><td data-label="Behavior">Correctly sources releases that follow TheTVDB ordering for Season 6.</td></tr>
-<tr><td data-label="Show">The Office (US)</td><td data-label="Behavior">Prefer &quot;Superfans&quot; versions and negate releases from groups that have issues with TheTVDB ordering.</td></tr>
+<tr><td data-label="Show">The Office (US)</td><td data-label="Behavior">Negates releases from groups that have issues with TheTVDB ordering.</td></tr>
+<tr><td data-label="Show">The Office (US)</td><td data-label="Behavior">Prefer &quot;Superfans&quot; versions.</td></tr>
 <tr><td data-label="Show">The Office Superfan</td><td data-label="Behavior">Avoids releases where bad release names cause incorrect parsing or loops.</td></tr>
 <tr><td data-label="Show">Parks and Recreation</td><td data-label="Behavior">Avoids releases with incorrect source IDs which cause loops.</td></tr>
 <tr><td data-label="Show">Scrubs</td><td data-label="Behavior">Avoids 25fps PAL versions.</td></tr>
@@ -759,17 +804,18 @@
         </div>
         <div class="docs-panel">
           <h3>Recent Changes</h3>
-          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody><tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6ce35f0f9641c690aaccc125f92c26e79320a93a" target="_blank" rel="noopener">#259</a></td><td data-label="Change">Add the Office Superfan Bad Groups REGEX to Bad Source</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6ce35f0f9641c690aaccc125f92c26e79320a93a" target="_blank" rel="noopener">#258</a></td><td data-label="Change">Cleaned Up LQ Format Titles</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6ce35f0f9641c690aaccc125f92c26e79320a93a" target="_blank" rel="noopener">#257</a></td><td data-label="Change">Added LQ Group Automation Format Added Wadu to LQ Group Auto</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6ce35f0f9641c690aaccc125f92c26e79320a93a" target="_blank" rel="noopener">#256</a></td><td data-label="Change">Add MCR and Asenshi MTBB to LQ Automation</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6ce35f0f9641c690aaccc125f92c26e79320a93a" target="_blank" rel="noopener">#255</a></td><td data-label="Change">Add Xiquexique to Bad Dual Groups</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6ce35f0f9641c690aaccc125f92c26e79320a93a" target="_blank" rel="noopener">#254</a></td><td data-label="Change">Fix 720p Quality on Anime</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6ce35f0f9641c690aaccc125f92c26e79320a93a" target="_blank" rel="noopener">#253</a></td><td data-label="Change">Yes Another Fix for LQ Automation</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6ce35f0f9641c690aaccc125f92c26e79320a93a" target="_blank" rel="noopener">#252</a></td><td data-label="Change">Fixed LQ Automation Groups REGEX</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6ce35f0f9641c690aaccc125f92c26e79320a93a" target="_blank" rel="noopener">#251</a></td><td data-label="Change">Add Reza to Dumpstarr LQ Automation Groups</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6ce35f0f9641c690aaccc125f92c26e79320a93a" target="_blank" rel="noopener">#250</a></td><td data-label="Change">Move Varyg to New Dumpstarr LQ Automation Format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6ce35f0f9641c690aaccc125f92c26e79320a93a" target="_blank" rel="noopener">#249</a></td><td data-label="Change">Added Spider Noir Authentic B W REGEX</td></tr></tbody></table>
+          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody><tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/1543a2a2780ae1c2295772174b38aa36715df81a" target="_blank" rel="noopener nofollow">#259</a></td><td data-label="Change">Add the Office Superfan Bad Groups REGEX to Bad Source</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0ce4c857765edf452dd8e41dc3ee87859e3e490" target="_blank" rel="noopener nofollow">#258</a></td><td data-label="Change">Cleaned Up LQ Format Titles</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/37c84331bbb432793f91a2aac4ee0c42aa6e1a78" target="_blank" rel="noopener nofollow">#257</a></td><td data-label="Change">Added LQ Group Automation Format Added Wadu to LQ Group Auto</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/657cfad5767565bc2cb85ebca512125cd5141dae" target="_blank" rel="noopener nofollow">#256</a></td><td data-label="Change">Add MCR and Asenshi MTBB to LQ Automation</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/49b3f9c8b550dc2b2bde54eed228c30b9e9901ab" target="_blank" rel="noopener nofollow">#255</a></td><td data-label="Change">Add Xiquexique to Bad Dual Groups</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/5e7371af555bd6796b464b861bd6c263ac5a8ecb" target="_blank" rel="noopener nofollow">#254</a></td><td data-label="Change">Fix 720p Quality on Anime</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/389258e56947bb039747cd33dbe53da9c119f2f1" target="_blank" rel="noopener nofollow">#253</a></td><td data-label="Change">Yes Another Fix for LQ Automation</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/23bf4b4b129bb2cf315d5d0321ddb4c6c1604a7b" target="_blank" rel="noopener nofollow">#252</a></td><td data-label="Change">Fixed LQ Automation Groups REGEX</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/68b6fd341e73e9efed67b13db7bcbb05ad41ae14" target="_blank" rel="noopener nofollow">#251</a></td><td data-label="Change">Add Reza to Dumpstarr LQ Automation Groups</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/791d094e6c4828229850708be74ed7ab2776a93e" target="_blank" rel="noopener nofollow">#250</a></td><td data-label="Change">Move Varyg to New Dumpstarr LQ Automation Format</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/5e9be0d9adc47369bc81c65fd083279ca5ee7c06" target="_blank" rel="noopener nofollow">#249</a></td><td data-label="Change">Added Spider Noir Authentic B W REGEX</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/b395c01e46fabadde8828ade05f9d4f4f8c5d700" target="_blank" rel="noopener nofollow">#248</a></td><td data-label="Change">Pulled Beta Anime Refactor the Sources in Anime</td></tr></tbody></table>
         </div>
       </div>
     </div>
@@ -803,7 +849,7 @@
           </button>
           <div class="faq-answer">
             <div class="faq-answer-inner">
-              Yes - Dumpstarr is a database, not a standalone tool. Profilarr reads from it and handles pushing the formats into your *arr applications. You can find Profilarr at <a href="https://github.com/Dictionarry-Hub/profilarr" target="_blank">its GitHub page</a>.
+              Yes - Dumpstarr is a database, not a standalone tool. Profilarr reads from it and handles pushing the formats into your *arr applications. You can find Profilarr at <a href="https://github.com/Dictionarry-Hub/profilarr" target="_blank" rel="noopener nofollow">its GitHub page</a>.
             </div>
           </div>
         </div>
@@ -839,7 +885,7 @@
           </button>
           <div class="faq-answer">
             <div class="faq-answer-inner">
-              Absolutely. Open an issue or pull request on the <a href="https://github.com/Dumpstarr/Database" target="_blank">GitHub</a>, or bring it up in the Discord community. All contributions and feedback are welcome.
+              Absolutely. Open an issue or pull request on the <a href="https://github.com/Dumpstarr/Database" target="_blank" rel="noopener nofollow">GitHub</a>, or bring it up in the Discord community. All contributions and feedback are welcome.
             </div>
           </div>
         </div>
@@ -860,8 +906,10 @@
     </div>
   </section>
 
+  </main>
+
   <!-- FOOTER -->
-  <footer>
+  <footer aria-label="Site footer">
     <div class="footer-inner">
       <div class="footer-brand">
         <img src="https://git.dumpstarr.dev/avatars/fa0b9a9809481a3f808984f26422585e3240b2d4328d974ffc2ee6ad2787abed?size=200" alt="Dumpstarr" />
@@ -869,22 +917,22 @@
         <p>"For a media setup that isn't a dumpster fire :D"</p>
       </div>
       <div class="footer-links">
-        <a href="https://github.com/Dumpstarr/Database" target="_blank">
+        <a href="https://github.com/Dumpstarr/Database" target="_blank" rel="noopener nofollow">
           <!-- GitHub -->
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
           GitHub
         </a>
-        <a href="https://git.dumpstarr.dev" target="_blank">
+        <a href="https://git.dumpstarr.dev" target="_blank" rel="noopener nofollow">
           <!-- Forgejo - git branch icon -->
           <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0zm0 2.122a2.25 2.25 0 1 0-1.5 0v.878A2.25 2.25 0 0 0 5.75 8.5h1.5v2.128a2.251 2.251 0 1 0 1.5 0V8.5h1.5a2.25 2.25 0 0 0 2.25-2.25v-.878a2.25 2.25 0 1 0-1.5 0v.878a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 5 6.25v-.878zm3.75 7.378a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0zm3-8.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0z"/></svg>
           Forgejo
         </a>
-        <a href="https://discord.com/invite/TbYW2Q4hGv" target="_blank">
+        <a href="https://discord.com/invite/TbYW2Q4hGv" target="_blank" rel="noopener nofollow">
           <!-- Discord -->
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
           Discord
         </a>
-        <a href="https://ko-fi.com/sweatyeggs69" target="_blank">
+        <a href="https://ko-fi.com/sweatyeggs69" target="_blank" rel="noopener nofollow">
           <!-- Ko-fi -->
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.035.67l.09.189.107-.18c1.063-1.816 3.11-1.7 4.018-.643.906 1.058.63 2.84-.696 3.719zm7.556-3.127c-.954 1.671-3.263 1.359-3.263 1.359l.032-2.969c.004-.022.01-.041.01-.064v-.099c.613.115 3.854.833 3.221 1.773z"/></svg>
           Support on Ko-fi

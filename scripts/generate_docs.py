@@ -334,7 +334,7 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
     fixes = readme_fixes()
     op_limit = max(1, len(fixes))
     op_html = "\n".join(
-        f'<tr><td data-label="Op"><a href="{h(row["url"])}" target="_blank" rel="noopener">#{h(row["number"])}</a></td><td data-label="Change">{h(row["title"])}</td></tr>'
+        f'<tr><td data-label="Op"><a href="{h(row["url"])}" target="_blank" rel="noopener nofollow">#{h(row["number"])}</a></td><td data-label="Change">{h(row["title"])}</td></tr>'
         for row in recent_ops(ops, op_limit)
     )
 
