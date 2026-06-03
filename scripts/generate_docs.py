@@ -268,10 +268,10 @@ def recent_ops(ops: list[pathlib.Path], limit: int) -> list[dict[str, str]]:
     repo_url = github_repo_url(DATABASE)
     for path in reversed(ops[-limit:]):
         number, title = path.name.split(".", 1)
-        commit, subject = commit_info_for_path(DATABASE, path)
+        commit, _subject = commit_info_for_path(DATABASE, path)
         rows.append({
             "number": number,
-            "title": subject or titleize_change(title),
+            "title": titleize_change(title),
             "url": f"{repo_url}/commit/{commit}" if repo_url and commit else "",
         })
     return rows
@@ -323,9 +323,9 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
             f"<h4>{h(profile['name'])}</h4>"
             f"{markdown_description(str(profile['description'] or ''))}"
             '<div class="docs-profile-metrics">'
+            f"<span><small>Target quality</small><strong>{h(target_quality)}</strong></span>"
             f"<span><small>Formats</small><strong>{h(profile['count'])}</strong></span>"
             f"<span><small>Min score</small><strong>{h(profile['min_score'])}</strong></span>"
-            f"<span><small>Target quality</small><strong>{h(target_quality)}</strong></span>"
             "</div>"
             "</article>"
         )
@@ -368,7 +368,7 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-mini-table a {{ color:var(--purple); text-decoration:none; }}
       .docs-mini-table a:hover {{ text-decoration:underline; }}
 
-      .docs-two-col {{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; margin-top:24px; }}
+      .docs-two-col {{ display:grid; grid-template-columns:1fr; gap:24px; margin-top:24px; }}
       .docs-two-col > .docs-panel {{ min-width:0; }}
       .docs-mini-table {{ width:100%; border-collapse:collapse; font-size:.9rem; }}
       .docs-mini-table td,.docs-mini-table th {{ padding:10px 12px; border-bottom:1px solid var(--outline); text-align:left; vertical-align:top; overflow-wrap:anywhere; }}
