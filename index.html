@@ -770,11 +770,11 @@
       <div class="docs-meta">
         <span>Package: <code>Dumpstarr Database 2.0.0</code></span>
         <span>Minimum Profilarr: <code>2.0.0</code></span>
-        <span>Modified: <code>06-06-2026</code></span>
+        <span>Modified: <code>06-07-2026</code></span>
       </div>
       <div class="docs-stats"><article class="docs-stat"><span>Profiles</span><strong>8</strong></article>
 <article class="docs-stat"><span>Custom formats</span><strong>161</strong></article>
-<article class="docs-stat"><span>Regex patterns</span><strong>459</strong></article></div>
+<article class="docs-stat"><span>Regex patterns</span><strong>460</strong></article></div>
       <div class="docs-panel">
         <h3>Quality profiles</h3>
         <div class="docs-profile-grid"><article class="docs-profile-card"><h4>Anime 1080p</h4><div class="docs-markdown"><p>Based on the TRaSH Guides Anime Profile, focusing on media that has Dual Audio.</p><ul><li>This profile will grab between a SDTV - 1080p Bluray file.</li><li>You will be preferring Dual Audio media (ie including English along with original language). If you&#x27;d prefer to <strong>only</strong> have the original language (Japanese), remove the Dual Audio format and set your language preference in this profile.</li><li>If you&#x27;d prefer to always grab Dual Audio releases, change the Dual Audio format score from 101 to 500</li></ul></div><div class="docs-profile-metrics"><span><small>Target quality</small><strong>1080p</strong></span><span><small>Formats</small><strong>63</strong></span><span><small>Min score</small><strong>0</strong></span></div></article>
@@ -798,22 +798,24 @@
 <tr><td data-label="Show">The Office Superfan</td><td data-label="Behavior">Avoids releases where bad release names cause incorrect parsing or loops.</td></tr>
 <tr><td data-label="Show">Parks and Recreation</td><td data-label="Behavior">Avoids releases with incorrect source IDs which cause loops.</td></tr>
 <tr><td data-label="Show">Scrubs</td><td data-label="Behavior">Avoids 25fps PAL versions.</td></tr>
+<tr><td data-label="Show">Sex and the City</td><td data-label="Behavior">Avoids groups that cause issues with metadata in media servers.</td></tr>
 <tr><td data-label="Show">Spider-Noir</td><td data-label="Behavior">Prefer &quot;Authentic B&amp;W&quot; versions.</td></tr>
 <tr><td data-label="Show">Whose Line Is It Anyway (US</td><td data-label="Behavior">Targets correct releases for early seasons of the US version due to inconsistent naming.</td></tr></tbody></table>
         </div>
         <div class="docs-panel">
           <h3>Recent Changes</h3>
-          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody><tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0a80f956992ed12a129388dc333099a4fae4602" target="_blank" rel="noopener nofollow">#263</a></td><td data-label="Change">Update Sonarr Naming Scheme Per Trash</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0a80f956992ed12a129388dc333099a4fae4602" target="_blank" rel="noopener nofollow">#262</a></td><td data-label="Change">Add Power to Dumpstarr LQ</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0a80f956992ed12a129388dc333099a4fae4602" target="_blank" rel="noopener nofollow">#261</a></td><td data-label="Change">Dumpstarr LQ Cleanup</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0a80f956992ed12a129388dc333099a4fae4602" target="_blank" rel="noopener nofollow">#260</a></td><td data-label="Change">Updated Dual Audio Format Description</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0a80f956992ed12a129388dc333099a4fae4602" target="_blank" rel="noopener nofollow">#259</a></td><td data-label="Change">Add the Office Superfan Bad Groups REGEX to Bad Source</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0a80f956992ed12a129388dc333099a4fae4602" target="_blank" rel="noopener nofollow">#258</a></td><td data-label="Change">Cleaned Up LQ Format Titles</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0a80f956992ed12a129388dc333099a4fae4602" target="_blank" rel="noopener nofollow">#257</a></td><td data-label="Change">Added LQ Group Automation Format Added Wadu to LQ Group Auto</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0a80f956992ed12a129388dc333099a4fae4602" target="_blank" rel="noopener nofollow">#256</a></td><td data-label="Change">Add MCR and Asenshi MTBB to LQ Automation</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0a80f956992ed12a129388dc333099a4fae4602" target="_blank" rel="noopener nofollow">#255</a></td><td data-label="Change">Add Xiquexique to Bad Dual Groups</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0a80f956992ed12a129388dc333099a4fae4602" target="_blank" rel="noopener nofollow">#254</a></td><td data-label="Change">Fix 720p Quality on Anime</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/a0a80f956992ed12a129388dc333099a4fae4602" target="_blank" rel="noopener nofollow">#253</a></td><td data-label="Change">Yes Another Fix for LQ Automation</td></tr></tbody></table>
+          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody><tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#264</a></td><td data-label="Change">Added Sex and the City Banned Groups</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#263</a></td><td data-label="Change">Update Sonarr Naming Scheme Per Trash</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#262</a></td><td data-label="Change">Add Power to Dumpstarr LQ</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#261</a></td><td data-label="Change">Dumpstarr LQ Cleanup</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#260</a></td><td data-label="Change">Updated Dual Audio Format Description</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#259</a></td><td data-label="Change">Add the Office Superfan Bad Groups REGEX to Bad Source</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#258</a></td><td data-label="Change">Cleaned Up LQ Format Titles</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#257</a></td><td data-label="Change">Added LQ Group Automation Format Added Wadu to LQ Group Auto</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#256</a></td><td data-label="Change">Add MCR and Asenshi MTBB to LQ Automation</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#255</a></td><td data-label="Change">Add Xiquexique to Bad Dual Groups</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#254</a></td><td data-label="Change">Fix 720p Quality on Anime</td></tr>
+<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/6d9721ad6db7cadd75cbfa35aa4a2bc987ae72e8" target="_blank" rel="noopener nofollow">#253</a></td><td data-label="Change">Yes Another Fix for LQ Automation</td></tr></tbody></table>
         </div>
       </div>
     </div>
