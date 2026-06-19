@@ -268,10 +268,10 @@ def recent_ops(ops: list[pathlib.Path], limit: int) -> list[dict[str, str]]:
     repo_url = github_repo_url(DATABASE)
     for path in reversed(ops[-limit:]):
         number, title = path.name.split(".", 1)
-        commit, _subject = commit_info_for_path(DATABASE, path)
+        commit, subject = commit_info_for_path(DATABASE, path)
         rows.append({
             "number": number,
-            "title": titleize_change(title),
+            "title": subject if subject else titleize_change(title),
             "url": f"{repo_url}/commit/{commit}" if repo_url and commit else "",
         })
     return rows
