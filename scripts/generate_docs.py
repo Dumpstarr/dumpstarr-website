@@ -229,7 +229,8 @@ def titleize_change(value: str) -> str:
     small_words = {"a", "an", "and", "for", "from", "in", "of", "on", "the", "to", "with"}
     words = (
         value.rsplit(".sql", 1)[0]
-        .replace("-", " ")
+        .replace("-", " "),
+        .replace("_", " ")
         .replace("foramt", "format")
         .strip()
         .split()
