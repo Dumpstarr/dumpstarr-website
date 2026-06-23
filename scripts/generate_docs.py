@@ -264,19 +264,6 @@ def commit_info_for_path(repo: pathlib.Path, path: pathlib.Path) -> tuple[str, s
     return commit.strip(), subject.strip()
 
 
-def recent_ops(ops: list[pathlib.Path], limit: int) -> list[dict[str, str]]:
-    rows = []
-    repo_url = github_repo_url(DATABASE)
-    for path in reversed(ops[-limit:]):
-        number, title = path.name.split(".", 1)
-        commit, subject = commit_info_for_path(DATABASE, path)
-        rows.append({
-            "number": number,
-            "title": subject if subject else titleize_change(title),
-            "url": f"{repo_url}/commit/{commit}" if repo_url and commit else "",
-        })
-    return rows
-
 
 def readme_fixes() -> list[tuple[str, str]]:
     readme = DATABASE / "README.md"
@@ -298,7 +285,7 @@ def readme_fixes() -> list[tuple[str, str]]:
     return rows
 
 
-def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
+def render_section(conn: sqlite3.Connection) -> str:
     meta = json.loads(META.read_text()) if META.exists() else {}
     commit_date = sh(["git", "log", "-1", "--format=%cs"], DATABASE) or "unknown"
     modified = display_date(commit_date)
@@ -333,12 +320,6 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
     profile_html = "\n".join(profile_html_parts)
 
     fixes = readme_fixes()
-    op_limit = max(1, len(fixes))
-    op_html = "\n".join(
-        f'<tr><td data-label="Op"><a href="{h(row["url"])}" target="_blank" rel="noopener nofollow">#{h(row["number"])}</a></td><td data-label="Change">{h(row["title"])}</td></tr>'
-        for row in recent_ops(ops, op_limit)
-    )
-
     fix_html = "\n".join(
         f'<tr><td data-label="Show">{h(show)}</td><td data-label="Behavior">{h(detail)}</td></tr>' for show, detail in fixes
     )
@@ -369,17 +350,12 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
       .docs-mini-table a {{ color:var(--purple); text-decoration:none; }}
       .docs-mini-table a:hover {{ text-decoration:underline; }}
 
-      .docs-two-col {{ display:grid; grid-template-columns:1fr; gap:24px; margin-top:24px; }}
-      .docs-two-col > .docs-panel {{ min-width:0; }}
-      .docs-mini-table {{ width:100%; border-collapse:collapse; font-size:.9rem; }}
+.docs-mini-table {{ width:100%; border-collapse:collapse; font-size:.9rem; }}
       .docs-mini-table td,.docs-mini-table th {{ padding:10px 12px; border-bottom:1px solid var(--outline); text-align:left; vertical-align:top; overflow-wrap:anywhere; }}
       .docs-mini-table th:first-child,.docs-mini-table td:first-child {{ width:72px; white-space:nowrap; color:var(--purple); font-weight:700; }}
-      .docs-recent-table {{ table-layout:fixed; }}
-      .docs-recent-table th:first-child,.docs-recent-table td:first-child {{ width:72px; }}
-      .docs-recent-table th:last-child,.docs-recent-table td:last-child {{ width:auto; }}
-      @media (max-width: 1100px) {{ .docs-profile-grid {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} .docs-two-col {{ grid-template-columns:1fr; }} }}
+@media (max-width: 1100px) {{ .docs-profile-grid {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} }}
       @media (max-width: 860px) {{ .docs-stats,.docs-profile-grid {{ grid-template-columns:1fr; }} }}
-      @media (max-width: 640px) {{ .docs-panel {{ padding:18px; }} .docs-mini-table,.docs-mini-table thead,.docs-mini-table tbody,.docs-mini-table tr,.docs-mini-table th,.docs-mini-table td {{ display:block; width:100%; }} .docs-mini-table thead {{ display:none; }} .docs-mini-table tr {{ padding:10px 0; border-bottom:1px solid var(--outline); }} .docs-mini-table td,.docs-mini-table th:first-child,.docs-mini-table td:first-child,.docs-recent-table th:first-child,.docs-recent-table td:first-child,.docs-recent-table th:last-child,.docs-recent-table td:last-child {{ width:100%; padding:6px 0; border-bottom:0; white-space:normal; }} .docs-mini-table td::before {{ content:attr(data-label); display:block; margin-bottom:2px; color:var(--on-surface-v); font-size:.66rem; line-height:1; font-weight:800; text-transform:uppercase; letter-spacing:.04em; }} }}
+      @media (max-width: 640px) {{ .docs-panel {{ padding:18px; }} .docs-mini-table,.docs-mini-table thead,.docs-mini-table tbody,.docs-mini-table tr,.docs-mini-table th,.docs-mini-table td {{ display:block; width:100%; }} .docs-mini-table thead {{ display:none; }} .docs-mini-table tr {{ padding:10px 0; border-bottom:1px solid var(--outline); }} .docs-mini-table td,.docs-mini-table th:first-child,.docs-mini-table td:first-child {{ width:100%; padding:6px 0; border-bottom:0; white-space:normal; }} .docs-mini-table td::before {{ content:attr(data-label); display:block; margin-bottom:2px; color:var(--on-surface-v); font-size:.66rem; line-height:1; font-weight:800; text-transform:uppercase; letter-spacing:.04em; }} }}
     </style>
     <div class="section-inner">
       <h2 class="section-title">Database Documentation</h2>
@@ -394,16 +370,10 @@ def render_section(conn: sqlite3.Connection, ops: list[pathlib.Path]) -> str:
         <h3>Quality profiles</h3>
         <div class="docs-profile-grid">{profile_html}</div>
       </div>
-      <div class="docs-two-col">
-        <div class="docs-panel">
+      <div class="docs-panel">
           <h3>Show Specific Fixes</h3>
           <table class="docs-mini-table"><thead><tr><th>Show</th><th>Behavior</th></tr></thead><tbody>{fix_html}</tbody></table>
         </div>
-        <div class="docs-panel">
-          <h3>Recent Changes</h3>
-          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody>{op_html}</tbody></table>
-        </div>
-      </div>
     </div>
   </section>
 {END}"""
@@ -427,7 +397,7 @@ def update_index(section: str) -> None:
 def main() -> None:
     ops = natural_ops()
     conn = connect_database(ops)
-    update_index(render_section(conn, ops))
+    update_index(render_section(conn))
     print(f"Generated documentation from {len(ops)} SQL operation files into {INDEX}")
 
 

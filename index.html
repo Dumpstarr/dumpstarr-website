@@ -752,17 +752,12 @@
       .docs-mini-table a { color:var(--purple); text-decoration:none; }
       .docs-mini-table a:hover { text-decoration:underline; }
 
-      .docs-two-col { display:grid; grid-template-columns:1fr; gap:24px; margin-top:24px; }
-      .docs-two-col > .docs-panel { min-width:0; }
-      .docs-mini-table { width:100%; border-collapse:collapse; font-size:.9rem; }
+.docs-mini-table { width:100%; border-collapse:collapse; font-size:.9rem; }
       .docs-mini-table td,.docs-mini-table th { padding:10px 12px; border-bottom:1px solid var(--outline); text-align:left; vertical-align:top; overflow-wrap:anywhere; }
       .docs-mini-table th:first-child,.docs-mini-table td:first-child { width:72px; white-space:nowrap; color:var(--purple); font-weight:700; }
-      .docs-recent-table { table-layout:fixed; }
-      .docs-recent-table th:first-child,.docs-recent-table td:first-child { width:72px; }
-      .docs-recent-table th:last-child,.docs-recent-table td:last-child { width:auto; }
-      @media (max-width: 1100px) { .docs-profile-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .docs-two-col { grid-template-columns:1fr; } }
+@media (max-width: 1100px) { .docs-profile-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
       @media (max-width: 860px) { .docs-stats,.docs-profile-grid { grid-template-columns:1fr; } }
-      @media (max-width: 640px) { .docs-panel { padding:18px; } .docs-mini-table,.docs-mini-table thead,.docs-mini-table tbody,.docs-mini-table tr,.docs-mini-table th,.docs-mini-table td { display:block; width:100%; } .docs-mini-table thead { display:none; } .docs-mini-table tr { padding:10px 0; border-bottom:1px solid var(--outline); } .docs-mini-table td,.docs-mini-table th:first-child,.docs-mini-table td:first-child,.docs-recent-table th:first-child,.docs-recent-table td:first-child,.docs-recent-table th:last-child,.docs-recent-table td:last-child { width:100%; padding:6px 0; border-bottom:0; white-space:normal; } .docs-mini-table td::before { content:attr(data-label); display:block; margin-bottom:2px; color:var(--on-surface-v); font-size:.66rem; line-height:1; font-weight:800; text-transform:uppercase; letter-spacing:.04em; } }
+      @media (max-width: 640px) { .docs-panel { padding:18px; } .docs-mini-table,.docs-mini-table thead,.docs-mini-table tbody,.docs-mini-table tr,.docs-mini-table th,.docs-mini-table td { display:block; width:100%; } .docs-mini-table thead { display:none; } .docs-mini-table tr { padding:10px 0; border-bottom:1px solid var(--outline); } .docs-mini-table td,.docs-mini-table th:first-child,.docs-mini-table td:first-child { width:100%; padding:6px 0; border-bottom:0; white-space:normal; } .docs-mini-table td::before { content:attr(data-label); display:block; margin-bottom:2px; color:var(--on-surface-v); font-size:.66rem; line-height:1; font-weight:800; text-transform:uppercase; letter-spacing:.04em; } }
     </style>
     <div class="section-inner">
       <h2 class="section-title">Database Documentation</h2>
@@ -786,8 +781,7 @@
 <article class="docs-profile-card"><h4>TV 1080p</h4><div class="docs-markdown"><p>Based on the TRaSH Guides WEB-1080p (Alternative) profile, focusing on balanced quality/file size.</p><ul><li>This profile is recommended for a set-it-and-forget-it setup.</li><li>Uncensored versions will be preferred while extended/special versions will be used as fallback.</li></ul></div><div class="docs-profile-metrics"><span><small>Target quality</small><strong>WEB 1080p</strong></span><span><small>Formats</small><strong>68</strong></span><span><small>Min score</small><strong>0</strong></span></div></article>
 <article class="docs-profile-card"><h4>TV 2160p</h4><div class="docs-markdown"><p>Based on the TRaSH Guides WEB-2160p (Alternative) profile, focusing on balanced quality/file size.</p><ul><li>This profile is recommended for a set-it-and-forget-it setup.</li><li>x265/HEVC is <strong>allowed</strong> on this profile, so some transcoding is possible if your client <strong>does not</strong> support x265/HEVC</li><li>Uncensored versions will be preferred while extended/special versions will be used as fallback.</li><li>Releases <strong>without</strong> HDR fallback are not allowed.</li></ul></div><div class="docs-profile-metrics"><span><small>Target quality</small><strong>WEB 2160p</strong></span><span><small>Formats</small><strong>74</strong></span><span><small>Min score</small><strong>0</strong></span></div></article></div>
       </div>
-      <div class="docs-two-col">
-        <div class="docs-panel">
+      <div class="docs-panel">
           <h3>Show Specific Fixes</h3>
           <table class="docs-mini-table"><thead><tr><th>Show</th><th>Behavior</th></tr></thead><tbody><tr><td data-label="Show">Adventure Time</td><td data-label="Behavior">Correctly sources releases that follow TheTVDB ordering for Season 8.</td></tr>
 <tr><td data-label="Show">Arthur</td><td data-label="Behavior">Avoids releases where bad release names cause incorrect parsing or loops.</td></tr>
@@ -802,22 +796,6 @@
 <tr><td data-label="Show">Spider-Noir</td><td data-label="Behavior">Prefer &quot;Authentic B&amp;W&quot; versions.</td></tr>
 <tr><td data-label="Show">Whose Line Is It Anyway (US</td><td data-label="Behavior">Targets correct releases for early seasons of the US version due to inconsistent naming.</td></tr></tbody></table>
         </div>
-        <div class="docs-panel">
-          <h3>Recent Changes</h3>
-          <table class="docs-mini-table docs-recent-table"><thead><tr><th>Op</th><th>Change</th></tr></thead><tbody><tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#293</a></td><td data-label="Change">Added Not German or English format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#292</a></td><td data-label="Change">Added Not German or English format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#291</a></td><td data-label="Change">Added Not German or English format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#290</a></td><td data-label="Change">Added Not German or English format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#289</a></td><td data-label="Change">Added Not German or English format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#288</a></td><td data-label="Change">Added Not German or English format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#287</a></td><td data-label="Change">Added Not German or English format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#286</a></td><td data-label="Change">Added Not German or English format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#285</a></td><td data-label="Change">Added Not German or English format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#284</a></td><td data-label="Change">Added Not German or English format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#283</a></td><td data-label="Change">Added Not German or English format</td></tr>
-<tr><td data-label="Op"><a href="https://github.com/Dumpstarr/Database/commit/8691d384e633038bbd8b41fdd6bd13e6d9c4f540" target="_blank" rel="noopener nofollow">#282</a></td><td data-label="Change">Added Not German or English format</td></tr></tbody></table>
-        </div>
-      </div>
     </div>
   </section>
 <!-- AUTO DOCS END -->
