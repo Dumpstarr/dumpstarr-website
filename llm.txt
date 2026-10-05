@@ -1,0 +1,34 @@
+# Dumpstarr
+
+> Dumpstarr is a community-maintained database of custom formats and quality profiles for Radarr and Sonarr, built for use with Profilarr. It aims to get decently sized media that looks great. It is an independent project, not affiliated with Radarr, Sonarr, or Profilarr.
+
+Dumpstarr is a database, not a standalone tool. Profilarr reads from it and pushes the formats and profiles into Radarr and Sonarr. The documentation section of the website is generated automatically from the Database repository and lists the current profiles, custom formats and show-specific fixes.
+
+## Getting started
+
+1. Install Profilarr (https://dictionarry.dev/, source at https://github.com/Dictionarry-Hub/profilarr).
+2. In Profilarr, point the database source to the Dumpstarr GitHub repository: https://github.com/Dumpstarr/Database
+3. Pick the custom formats and quality profiles that fit your preferences.
+4. Sync in Profilarr to push them into Radarr and Sonarr. No manual JSON editing is required.
+
+## Quality profiles
+
+- Anime 1080p: Based on the TRaSH Guides anime profile, preferring dual audio releases
+- LQ 1080p: Saves as much storage as possible for content you do not care much about
+- Movies 1080p: Streaming-optimized sources for direct play, no HD audio
+- Movies 1080p HQ: Higher-quality WEB releases, similar to the TRaSH SQP-4 MA Hybrid profile
+- Movies 2160p: Streaming-optimized 4K with HDR and Dolby Digital Plus, no HD audio
+- Movies 2160p HQ: Higher-quality 4K WEB releases with HDR and Dolby Vision
+- TV 1080p: Based on the TRaSH Guides WEB-1080p (Alternative) profile
+- TV 2160p: Based on the TRaSH Guides WEB-2160p (Alternative) profile, preferring HDR or Dolby Vision
+
+## Pages
+
+- [Home](https://dumpstarr.dev/): About, getting started, database documentation and FAQ
+
+## Links
+
+- [Database on GitHub](https://github.com/Dumpstarr/Database): Source of the formats and profiles; open issues or pull requests here
+- [Forgejo](https://git.dumpstarr.dev): Mirror and issue tracker
+- [Discord](https://discord.com/invite/TbYW2Q4hGv): Community support
+- [Ko-fi](https://ko-fi.com/sweatyeggs69): Support the project
