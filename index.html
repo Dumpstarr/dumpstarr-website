@@ -84,6 +84,22 @@
       overflow-x: hidden;
     }
 
+    /* ── SKIP LINK ── */
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 1000;
+      padding: 12px 20px;
+      background: var(--purple);
+      color: #fff;
+      font-weight: 700;
+      border-radius: var(--radius-s);
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 16px; outline: 3px solid var(--on-surface); outline-offset: 2px; }
+    main:focus { outline: none; }
+
     /* ── NAV ── */
     nav {
       position: sticky;
@@ -622,6 +638,8 @@
 </head>
 <body>
 
+  <a class="skip-link" href="#main">Skip to main content</a>
+
   <!-- NAV -->
   <nav aria-label="Main navigation">
     <div class="nav-inner">
@@ -640,7 +658,7 @@
     </div>
   </nav>
 
-  <main>
+  <main id="main" tabindex="-1">
 
   <!-- HERO -->
   <div class="hero">
