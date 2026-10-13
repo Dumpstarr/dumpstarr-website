@@ -29,6 +29,5 @@ Dumpstarr is a database, not a standalone tool. Profilarr reads from it and push
 ## Links
 
 - [Database on GitHub](https://github.com/Dumpstarr/Database): Source of the formats and profiles; open issues or pull requests here
-- [Forgejo](https://git.dumpstarr.dev): Mirror and issue tracker
 - [Discord](https://discord.com/invite/TbYW2Q4hGv): Community support
 - [Ko-fi](https://ko-fi.com/sweatyeggs69): Support the project
