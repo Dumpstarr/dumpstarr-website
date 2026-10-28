@@ -17,6 +17,7 @@
     .skip-link { position: absolute; left: 16px; top: -100px; z-index: 1000; padding: 12px 20px; background: var(--purple); color: #fff; font-weight: 700; border-radius: var(--radius-s); text-decoration: none; }
     .skip-link:focus { top: 16px; outline: 3px solid var(--on-surface); outline-offset: 2px; }
     main:focus { outline: none; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
     a:focus-visible { outline: 3px solid var(--purple); outline-offset: 3px; }
     nav { border-bottom: 1px solid var(--outline); padding: 0 32px; }
     .nav-inner { max-width: 1120px; margin: 0 auto; height: 64px; display: flex; align-items: center; }

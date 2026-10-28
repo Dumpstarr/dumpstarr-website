@@ -99,6 +99,9 @@
     }
     .skip-link:focus { top: 16px; outline: 3px solid var(--on-surface); outline-offset: 2px; }
     main:focus { outline: none; }
+    :focus-visible { outline: 3px solid var(--purple); outline-offset: 3px; }
+    footer :focus-visible { outline-color: #D0BCFF; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 
     /* ── NAV ── */
     nav {
@@ -224,8 +227,8 @@
       margin-bottom: 16px;
     }
 
-    .hero h1 .accent-green { color: #F5C518; }
-    .hero h1 .accent-purple { color: #00AEEF; }
+    .hero h1 .accent-green { color: #A67C00; }
+    .hero h1 .accent-purple { color: #0086BD; }
 
     .hero-sub {
       font-size: 1.1rem;
@@ -237,7 +240,7 @@
 
     .hero-slogan {
       font-style: italic;
-      color: var(--fire);
+      color: #B8441A;
       font-weight: 500;
     }
 
@@ -423,7 +426,7 @@
       font-family: 'Outfit', sans-serif;
       font-size: 2.8rem;
       font-weight: 800;
-      color: var(--purple-light);
+      color: #8B6FD6;
       line-height: 1;
       margin-bottom: 12px;
     }
@@ -574,7 +577,7 @@
 
     .footer-brand p {
       font-size: 0.85rem;
-      color: #79747E;
+      color: #A8A3AE;
       font-style: italic;
     }
 
@@ -606,7 +609,7 @@
       padding-top: 24px;
       border-top: 1px solid #2C2930;
       font-size: 0.8rem;
-      color: #49454F;
+      color: #9A95A0;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
