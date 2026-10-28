@@ -1,0 +1,11 @@
+# Cloudflare Workers static assets. The repo root is the site; .assetsignore lists what isn't served.
+# Each page is a folder (about/index.html) served at /about; /about/ and
+# /about/index.html redirect there. not_found_handling serves 404.html with a
+# 404 status for unknown paths.
+name = "dumpstarr-website"
+compatibility_date = "2026-10-01"
+
+[assets]
+directory = "."
+html_handling = "drop-trailing-slash"
+not_found_handling = "404-page"

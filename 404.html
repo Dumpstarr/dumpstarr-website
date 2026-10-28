@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found - Dumpstarr</title>
+  <meta name="description" content="This page could not be found. Dumpstarr is a community-maintained database of custom formats and quality profiles for Radarr and Sonarr." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="icon" type="image/png" href="https://avatars.githubusercontent.com/u/240951577?s=400&u=1c8ce0b9c5b4e435c58a0ea70e7295b42d8e7071&v=4" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root { --purple: #6750A4; --surface: #FFFBFE; --outline: #CAC4D0; --on-surface: #1C1B1F; --on-surface-v: #49454F; --radius-s: 12px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--on-surface); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+    .skip-link { position: absolute; left: 16px; top: -100px; z-index: 1000; padding: 12px 20px; background: var(--purple); color: #fff; font-weight: 700; border-radius: var(--radius-s); text-decoration: none; }
+    .skip-link:focus { top: 16px; outline: 3px solid var(--on-surface); outline-offset: 2px; }
+    main:focus { outline: none; }
+    a:focus-visible { outline: 3px solid var(--purple); outline-offset: 3px; }
+    nav { border-bottom: 1px solid var(--outline); padding: 0 32px; }
+    .nav-inner { max-width: 1120px; margin: 0 auto; height: 64px; display: flex; align-items: center; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--on-surface); }
+    .nav-logo img { width: 36px; height: 36px; object-fit: cover; border-radius: 50%; }
+    .nav-logo span { font-family: 'Outfit', sans-serif; font-weight: 700; }
+    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 80px 24px; text-align: center; }
+    h1 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 1.5rem + 2.5vw, 3rem); line-height: 1.15; margin-bottom: 16px; }
+    p { color: var(--on-surface-v); max-width: 520px; margin: 0 auto 32px; }
+    .btn { display: inline-block; background: var(--purple); color: #fff; font-weight: 600; padding: 12px 28px; border-radius: 100px; text-decoration: none; }
+    .btn:hover { background: #4F378B; }
+    footer { border-top: 1px solid var(--outline); padding: 24px 32px; text-align: center; font-size: 0.875rem; color: var(--on-surface-v); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <nav aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <img src="https://avatars.githubusercontent.com/u/240951577?s=400&u=1c8ce0b9c5b4e435c58a0ea70e7295b42d8e7071&v=4" alt="Dumpstarr logo" />
+        <span>Dumpstarr</span>
+      </a>
+    </div>
+  </nav>
+
+  <main id="main" tabindex="-1">
+    <div>
+      <h1>Page not found</h1>
+      <p>That page doesn't exist. The custom formats, quality profiles and setup guide are all on the home page.</p>
+      <a class="btn" href="/">Back to Dumpstarr</a>
+    </div>
+  </main>
+
+  <footer aria-label="Site footer">
+    <span>Dumpstarr. Not affiliated with Radarr, Sonarr, or Profilarr.</span>
+  </footer>
+</body>
+</html>
